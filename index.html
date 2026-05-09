@@ -1,0 +1,2163 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>後中醫生物學練習器 · 神農藥草園分支</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;600;700;900&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1410;
+    --ink-soft: #3a2f26;
+    --paper: #f4ecdc;
+    --paper-deep: #e8dcc4;
+    --paper-light: #faf6ec;
+    --cinnabar: #b13e2f;
+    --cinnabar-deep: #8a2c20;
+    --jade: #4a6b54;
+    --jade-deep: #324a3a;
+    --gold: #b8884a;
+    --gold-light: #d4a86a;
+    --shadow: rgba(40, 25, 15, 0.15);
+    --line: #c8b896;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Noto Serif TC', 'Songti TC', serif;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    background-image:
+      radial-gradient(ellipse at 20% 0%, rgba(184, 136, 74, 0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 100%, rgba(74, 107, 84, 0.06) 0%, transparent 50%),
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.25'/%3E%3C/svg%3E");
+  }
+
+  .app {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 32px 24px 80px;
+  }
+
+  /* ===== Header ===== */
+  header {
+    border-bottom: 2px double var(--ink);
+    padding-bottom: 20px;
+    margin-bottom: 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .brand h1 {
+    font-family: "標楷體", "DFKai-SB", "BiauKai", "Kaiti TC", "Kaiti", "STKaiti", serif;
+    font-size: 36px;
+    font-weight: 400;
+    letter-spacing: 4px;
+    color: var(--ink);
+    line-height: 1.1;
+  }
+  .brand .seal {
+    display: inline-block;
+    background: var(--cinnabar);
+    color: var(--paper-light);
+    font-size: 13px;
+    padding: 3px 10px;
+    border-radius: 2px;
+    letter-spacing: 6px;
+    margin-left: 8px;
+    vertical-align: middle;
+    font-family: 'Noto Serif TC', serif;
+    font-weight: 500;
+  }
+  .brand .sub {
+    font-size: 13px;
+    color: var(--ink-soft);
+    letter-spacing: 3px;
+    margin-top: 6px;
+  }
+  .stats-mini {
+    display: flex;
+    gap: 18px;
+    font-size: 13px;
+    color: var(--ink-soft);
+  }
+  .stats-mini b {
+    display: block;
+    font-size: 22px;
+    color: var(--cinnabar-deep);
+    font-weight: 700;
+  }
+
+  /* ===== Tabs ===== */
+  nav.tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 24px;
+    border-bottom: 1px solid var(--line);
+    flex-wrap: wrap;
+  }
+  nav.tabs button {
+    background: transparent;
+    border: none;
+    padding: 12px 20px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--ink-soft);
+    letter-spacing: 2px;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -1px;
+    transition: all 0.2s;
+    position: relative;
+  }
+  nav.tabs button:hover { color: var(--ink); }
+  nav.tabs button.active {
+    color: var(--cinnabar-deep);
+    border-bottom-color: var(--cinnabar);
+    font-weight: 700;
+  }
+  nav.tabs button .badge {
+    display: inline-block;
+    background: var(--cinnabar);
+    color: var(--paper-light);
+    font-size: 10px;
+    padding: 1px 6px;
+    border-radius: 10px;
+    margin-left: 4px;
+    vertical-align: top;
+    letter-spacing: 0;
+  }
+
+  /* ===== Panels ===== */
+  .panel { display: none; }
+  .panel.active { display: block; animation: fadeIn 0.3s ease; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ===== Cards ===== */
+  .card {
+    background: var(--paper-light);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 24px;
+    box-shadow: 0 2px 8px var(--shadow);
+    margin-bottom: 20px;
+  }
+  .card h2 {
+    font-size: 20px;
+    margin-bottom: 16px;
+    border-left: 4px solid var(--cinnabar);
+    padding-left: 12px;
+    letter-spacing: 2px;
+    font-weight: 700;
+  }
+  .card h3 {
+    font-size: 16px;
+    margin: 16px 0 10px;
+    color: var(--jade-deep);
+    letter-spacing: 1px;
+  }
+
+  /* ===== Mode buttons ===== */
+  .mode-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+  .mode-btn {
+    background: var(--paper-light);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 18px 20px;
+    cursor: pointer;
+    font-family: inherit;
+    text-align: left;
+    transition: all 0.2s;
+    box-shadow: 0 2px 6px var(--shadow);
+    position: relative;
+    overflow: hidden;
+  }
+  .mode-btn::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 3px;
+    background: var(--gold);
+  }
+  .mode-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px var(--shadow);
+    border-color: var(--cinnabar);
+  }
+  .mode-btn .ttl {
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--ink);
+  }
+  .mode-btn .desc {
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin-top: 6px;
+    line-height: 1.5;
+  }
+
+  /* ===== Selectors ===== */
+  .selectors {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  .selectors label {
+    font-size: 13px;
+    color: var(--ink-soft);
+    letter-spacing: 1px;
+  }
+  select, input[type="number"] {
+    background: var(--paper-light);
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    padding: 7px 12px;
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--ink);
+    cursor: pointer;
+  }
+  button.primary {
+    background: var(--cinnabar);
+    color: var(--paper-light);
+    border: none;
+    padding: 9px 22px;
+    border-radius: 3px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  button.primary:hover { background: var(--cinnabar-deep); }
+  button.primary:disabled { background: #999; cursor: not-allowed; }
+  button.ghost {
+    background: transparent;
+    color: var(--ink);
+    border: 1px solid var(--ink);
+    padding: 8px 18px;
+    border-radius: 3px;
+    font-family: inherit;
+    font-size: 13px;
+    cursor: pointer;
+    letter-spacing: 1px;
+  }
+  button.ghost:hover { background: var(--ink); color: var(--paper-light); }
+
+  /* ===== Question card ===== */
+  .qcard {
+    background: var(--paper-light);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 28px;
+    box-shadow: 0 4px 16px var(--shadow);
+    position: relative;
+  }
+  .qmeta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px dashed var(--line);
+    padding-bottom: 12px;
+    margin-bottom: 18px;
+    font-size: 13px;
+    color: var(--ink-soft);
+    letter-spacing: 1px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .qmeta .tag {
+    display: inline-block;
+    background: var(--jade);
+    color: var(--paper-light);
+    padding: 2px 10px;
+    border-radius: 2px;
+    font-size: 11px;
+    letter-spacing: 1px;
+    margin-right: 4px;
+  }
+  .qmeta .tag.year { background: var(--gold); }
+  .qmeta .tag.chap { background: var(--jade); }
+  .qstem {
+    font-size: 17px;
+    line-height: 1.85;
+    margin-bottom: 22px;
+    color: var(--ink);
+    white-space: pre-wrap;
+  }
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .opt {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 16px;
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    background: var(--paper);
+    cursor: pointer;
+    transition: all 0.15s;
+    font-size: 15px;
+    line-height: 1.7;
+  }
+  .opt:hover { border-color: var(--cinnabar); background: var(--paper-light); }
+  .opt .lbl {
+    background: var(--ink);
+    color: var(--paper-light);
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-weight: 700;
+    font-size: 13px;
+  }
+  .opt.selected { border-color: var(--cinnabar); background: rgba(177, 62, 47, 0.07); }
+  .opt.selected .lbl { background: var(--cinnabar); }
+  .opt.correct { border-color: var(--jade); background: rgba(74, 107, 84, 0.12); }
+  .opt.correct .lbl { background: var(--jade); }
+  .opt.wrong { border-color: var(--cinnabar-deep); background: rgba(138, 44, 32, 0.10); }
+  .opt.wrong .lbl { background: var(--cinnabar-deep); }
+  .opt.disabled { cursor: default; }
+
+  .qfoot {
+    margin-top: 22px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .explain {
+    margin-top: 18px;
+    padding: 16px 20px;
+    background: linear-gradient(135deg, rgba(184, 136, 74, 0.08), rgba(74, 107, 84, 0.08));
+    border-left: 3px solid var(--gold);
+    border-radius: 3px;
+    font-size: 14px;
+    line-height: 1.85;
+    color: var(--ink-soft);
+  }
+  .explain b { color: var(--cinnabar-deep); }
+  .explain .answer-line {
+    font-size: 16px;
+    color: var(--ink);
+    margin-bottom: 8px;
+    font-weight: 700;
+  }
+
+  /* ===== Mock exam ===== */
+  .timer {
+    font-family: 'Noto Sans TC', monospace;
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--cinnabar-deep);
+    letter-spacing: 2px;
+  }
+  .timer.warn { color: var(--cinnabar); animation: pulse 1s infinite; }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+  }
+  .progress-bar {
+    height: 6px;
+    background: var(--paper-deep);
+    border-radius: 3px;
+    overflow: hidden;
+    margin: 12px 0;
+  }
+  .progress-bar > span {
+    display: block;
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold), var(--cinnabar));
+    transition: width 0.3s;
+  }
+  .qnav {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+    gap: 6px;
+    margin-top: 12px;
+  }
+  .qnav button {
+    background: var(--paper-deep);
+    border: 1px solid var(--line);
+    width: 100%;
+    aspect-ratio: 1;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 13px;
+    border-radius: 3px;
+    transition: all 0.15s;
+  }
+  .qnav button.answered { background: var(--jade); color: var(--paper-light); border-color: var(--jade-deep); }
+  .qnav button.current { outline: 2px solid var(--cinnabar); outline-offset: 1px; }
+  .qnav button.flagged { background: var(--gold-light); }
+  .qnav button.correct { background: var(--jade); color: white; }
+  .qnav button.wrong { background: var(--cinnabar); color: white; }
+
+  /* ===== Stats / Reports ===== */
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+  .stat-tile {
+    background: var(--paper-light);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 18px;
+    text-align: center;
+  }
+  .stat-tile .num {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--cinnabar-deep);
+    line-height: 1;
+    font-family: "標楷體", "DFKai-SB", "BiauKai", "Kaiti TC", "Noto Serif TC", serif;
+  }
+  .stat-tile .lbl {
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin-top: 6px;
+    letter-spacing: 2px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 12px;
+    font-size: 14px;
+  }
+  th, td {
+    padding: 10px 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--line);
+  }
+  th {
+    background: var(--paper-deep);
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--ink);
+  }
+  tr:hover td { background: rgba(184, 136, 74, 0.05); }
+
+  /* ===== Notes ===== */
+  .note-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .note {
+    background: var(--paper-light);
+    border-left: 3px solid var(--gold);
+    border-top: 1px solid var(--line);
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    border-radius: 3px;
+    padding: 16px 18px;
+  }
+  .note-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+  .note-meta {
+    font-size: 11px;
+    color: var(--ink-soft);
+    margin-bottom: 8px;
+  }
+  .note-body {
+    font-size: 14px;
+    line-height: 1.75;
+    color: var(--ink-soft);
+    white-space: pre-wrap;
+  }
+  .note-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  .note-actions button {
+    background: transparent;
+    border: 1px solid var(--line);
+    padding: 4px 10px;
+    border-radius: 2px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 12px;
+    color: var(--ink-soft);
+  }
+  .note-actions button:hover { background: var(--paper-deep); color: var(--ink); }
+
+  textarea, input[type="text"] {
+    width: 100%;
+    background: var(--paper-light);
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    padding: 10px 12px;
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--ink);
+    resize: vertical;
+    line-height: 1.7;
+  }
+  textarea { min-height: 100px; }
+
+  /* ===== Modal / Result ===== */
+  .modal-bg {
+    position: fixed;
+    inset: 0;
+    background: rgba(26, 20, 16, 0.7);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 20px;
+  }
+  .modal-bg.active { display: flex; }
+  .modal {
+    background: var(--paper-light);
+    border-radius: 4px;
+    padding: 30px;
+    max-width: 600px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    border-top: 4px solid var(--cinnabar);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  }
+  .modal h2 {
+    font-size: 22px;
+    margin-bottom: 16px;
+    text-align: center;
+    letter-spacing: 4px;
+  }
+
+  .empty {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--ink-soft);
+    font-size: 14px;
+    letter-spacing: 2px;
+  }
+  .empty .ico {
+    font-family: "標楷體", "DFKai-SB", "BiauKai", "Kaiti TC", serif;
+    font-size: 48px;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+
+  .filter-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+  .chip {
+    background: var(--paper-deep);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 5px 12px;
+    font-size: 12px;
+    cursor: pointer;
+    color: var(--ink-soft);
+    letter-spacing: 1px;
+    transition: all 0.15s;
+  }
+  .chip:hover { border-color: var(--cinnabar); }
+  .chip.active { background: var(--ink); color: var(--paper-light); border-color: var(--ink); }
+
+  .small { font-size: 12px; color: var(--ink-soft); }
+  .hidden { display: none !important; }
+
+  /* sectioned result chart */
+  .bar-row { display: flex; align-items: center; gap: 10px; margin: 6px 0; font-size: 13px; }
+  .bar-row .lbl { width: 90px; color: var(--ink-soft); }
+  .bar-row .bar { flex: 1; height: 14px; background: var(--paper-deep); border-radius: 2px; overflow: hidden; }
+  .bar-row .bar > span { display: block; height: 100%; background: linear-gradient(90deg, var(--jade), var(--gold)); }
+  .bar-row .num { width: 60px; text-align: right; font-weight: 600; }
+
+  @media (max-width: 600px) {
+    .app { padding: 16px 12px 60px; }
+    .brand h1 { font-size: 28px; }
+    nav.tabs button { padding: 10px 12px; font-size: 13px; letter-spacing: 1px; }
+    .qcard, .card { padding: 18px; }
+    .qstem { font-size: 16px; }
+    .opt { font-size: 14px; padding: 10px 12px; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="brand">
+      <h1>後中醫生物學練習器<span class="seal">神農</span></h1>
+      <div class="sub">CMU 學士後中醫學系 · 105–114 歷屆考題 · Campbell Biology 章節對照</div>
+    </div>
+    <div class="stats-mini" id="headerStats"></div>
+  </header>
+
+  <nav class="tabs" id="tabs">
+    <button data-tab="home" class="active">概覽</button>
+    <button data-tab="practice">每日練習</button>
+    <button data-tab="chapter">章節練習</button>
+    <button data-tab="mock">模擬考試</button>
+    <button data-tab="wrong">錯題複習 <span class="badge" id="wrongBadge" style="display:none">0</span></button>
+    <button data-tab="notes">知識點筆記</button>
+    <button data-tab="report">學習報告</button>
+  </nav>
+
+  <!-- ===== HOME ===== -->
+  <div class="panel active" id="panel-home">
+    <div class="card">
+      <h2>今日學習</h2>
+      <div class="stat-grid" id="homeStats"></div>
+      <div class="mode-grid">
+        <button class="mode-btn" data-go="practice">
+          <div class="ttl">每日練習</div>
+          <div class="desc">隨機抽取題目，作答後即時顯示詳解與所屬 Campbell 章節。</div>
+        </button>
+        <button class="mode-btn" data-go="chapter">
+          <div class="ttl">章節練習</div>
+          <div class="desc">依據 Campbell 八大單元篩選，集中加強弱項。</div>
+        </button>
+        <button class="mode-btn" data-go="mock">
+          <div class="ttl">模擬考試</div>
+          <div class="desc">50 題 80 分鐘倒數計時，仿真實考試節奏。</div>
+        </button>
+        <button class="mode-btn" data-go="wrong">
+          <div class="ttl">錯題複習</div>
+          <div class="desc">所有歷次答錯題目，反覆研磨直至全會。</div>
+        </button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>使用說明</h2>
+      <div style="line-height: 1.95; font-size:14px; color: var(--ink-soft);">
+        <p>• 本練習器內建 <b>105–114 學年度共 500 道</b> 中國醫學士後中醫考古題，皆已對照 Campbell Biology 教材章節。</p>
+        <p>• 答題紀錄、錯題、筆記均以 <b>瀏覽器本地儲存</b>（localStorage）保存，建議使用同一瀏覽器固定使用。</p>
+        <p>• 點擊題目右上方「<b>記筆記</b>」可將該題納入個人知識點筆記庫，配合艾賓豪斯遺忘曲線複習。</p>
+        <p>• 模擬考試結束後會依章節分析作答狀況，協助找出弱點。</p>
+        <p>• 計分規則對照中國醫考試：<b>每題 2 分，答錯倒扣 0.7 分（111 學年起）</b>，未作答不計分。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== PRACTICE ===== -->
+  <div class="panel" id="panel-practice">
+    <div class="card">
+      <h2>每日練習</h2>
+      <div class="selectors">
+        <label>題數</label>
+        <select id="practiceCount">
+          <option value="10">10 題</option>
+          <option value="20" selected>20 題</option>
+          <option value="30">30 題</option>
+          <option value="50">50 題</option>
+        </select>
+        <label>年度</label>
+        <select id="practiceYear">
+          <option value="all">全部年度</option>
+        </select>
+        <label>來源</label>
+        <select id="practiceSource">
+          <option value="all">考古+章節重點</option>
+          <option value="考古">僅歷屆考古題</option>
+          <option value="原創">僅章節重點補強題</option>
+        </select>
+        <label>類型</label>
+        <select id="practiceType">
+          <option value="random">隨機抽題</option>
+          <option value="unseen">未做過優先</option>
+          <option value="mistakes">含已錯題</option>
+        </select>
+        <button class="primary" id="practiceStart">開始練習</button>
+      </div>
+    </div>
+    <div id="practiceArea"></div>
+  </div>
+
+  <!-- ===== CHAPTER ===== -->
+  <div class="panel" id="panel-chapter">
+    <div class="card">
+      <h2>章節練習 · Campbell 八大單元</h2>
+      <p class="small" style="margin-bottom:12px;">點選章節後直接進入練習。題庫已依關鍵字自動分類。</p>
+      <div id="chapterList"></div>
+    </div>
+    <div id="chapterArea"></div>
+  </div>
+
+  <!-- ===== MOCK ===== -->
+  <div class="panel" id="panel-mock">
+    <div class="card" id="mockSetup">
+      <h2>模擬考試</h2>
+      <p style="margin-bottom:14px; line-height:1.8; font-size:14px;">
+        本模擬考共 <b>50 題單選</b>，限時 <b>80 分鐘</b>，每題 2 分共 100 分，<b>答錯倒扣 0.7 分</b>，不作答不計分。
+      </p>
+      <div class="selectors">
+        <label>出題範圍</label>
+        <select id="mockYear">
+          <option value="all">混合全部年度（隨機）</option>
+        </select>
+        <button class="primary" id="mockStart">開始模擬考</button>
+      </div>
+    </div>
+    <div id="mockArea" class="hidden"></div>
+  </div>
+
+  <!-- ===== WRONG ===== -->
+  <div class="panel" id="panel-wrong">
+    <div class="card">
+      <h2>錯題複習</h2>
+      <div class="selectors" id="wrongFilter"></div>
+      <div id="wrongArea"></div>
+    </div>
+  </div>
+
+  <!-- ===== NOTES ===== -->
+  <div class="panel" id="panel-notes">
+    <div class="card">
+      <h2>知識點筆記</h2>
+      <div style="display:grid; grid-template-columns: 1fr; gap:12px; margin-bottom:18px;">
+        <input type="text" id="noteTitle" placeholder="筆記標題（如：糖解作用關鍵酵素）">
+        <textarea id="noteBody" placeholder="筆記內容、機轉、口訣……"></textarea>
+        <div style="display:flex; gap:10px; align-items:center;">
+          <select id="noteChap"></select>
+          <button class="primary" id="noteSave">儲存筆記</button>
+          <span class="small" id="noteEditingHint"></span>
+        </div>
+      </div>
+      <div class="filter-row" id="noteFilter"></div>
+      <div class="note-list" id="noteList"></div>
+    </div>
+  </div>
+
+  <!-- ===== REPORT ===== -->
+  <div class="panel" id="panel-report">
+    <div class="card">
+      <h2>學習報告</h2>
+      <div class="stat-grid" id="reportStats"></div>
+      <h3>各章節答對率</h3>
+      <div id="chapterChart"></div>
+      <h3 style="margin-top:24px;">各年度答對率</h3>
+      <div id="yearChart"></div>
+      <h3 style="margin-top:24px;">最近模擬考紀錄</h3>
+      <div id="mockHistory"></div>
+      <div style="margin-top:24px; display:flex; gap:10px;">
+        <button class="ghost" id="exportData">匯出資料</button>
+        <button class="ghost" id="importData">匯入資料</button>
+        <button class="ghost" id="resetData" style="border-color:var(--cinnabar); color:var(--cinnabar);">清除所有紀錄</button>
+        <input type="file" id="importFile" accept=".json" class="hidden">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Modal (mock result) ===== -->
+<div class="modal-bg" id="modalBg">
+  <div class="modal" id="modalBody"></div>
+</div>
+
+<script>
+/* ============================================================
+ * 後中醫生物學練習器 — 題庫資料
+ * 105–114 學年度中國醫學士後中醫學系生物學考古題
+ * 欄位: y=年度, n=題號, q=題幹, o=選項陣列, a=答案, c=Campbell章節
+ * 章節代碼: CHEM/CELL/METAB/GEN/EVO/DIV/PLANT/ANIM/IMM/ECO
+ * ============================================================ */
+
+const QUESTIONS = [
+/* ============= 105 學年度 ============= */
+{y:105,n:1,q:"決定芥科植物擬南芥(Arabidopsis)花的結構發育基因分為A、B、C三類。A類控制花萼,A+B控制花瓣,B+C控制雄蕊,C類控制雌蕊。當B類基因發生缺失突變時,花朵最可能的構造為?",o:["花萼-花瓣-雄蕊-雌蕊(正常)","花萼-雌蕊-雌蕊-花萼","花瓣-花瓣-雄蕊-雄蕊","花萼-花萼-雌蕊-雌蕊","雄蕊-雄蕊-雌蕊-雌蕊"],a:"B",c:"GEN"},
+{y:105,n:2,q:"G蛋白偶聯受體(GPCR)的敘述,何者有誤?",o:["GPCR是7次跨膜的多肽鏈","胞外部分有與訊息分子結合結構,胞內部分有激活G蛋白的催化結構","它是由α、β、γ三個不同次單位組成的異三聚體蛋白","訊息分子結合GPCR後,誘導α次單位與GTP結合","活化的腺苷酸環化酶催化AMP轉變成cAMP"],a:"E",c:"CELL"},
+{y:105,n:3,q:"關於光合作用中的光系統II,下列敘述何者有誤?",o:["含P680(高度特化的葉綠素a)","發生環式光合磷酸化","含D1和D2蛋白","接受水裂解產生的電子","葉綠素b、胡蘿蔔素等可作為天線色素"],a:"B",c:"METAB"},
+{y:105,n:4,q:"有關免疫機制的論述,下列敘述何者正確?",o:["個體對病原微生物的防禦能力","個體抗傳染的過程","個體識別和排除抗原性異物的功能","個體清除消滅自體突變細胞的功能","個體清除自身衰老、死亡細胞的功能"],a:"C",c:"IMM"},
+{y:105,n:5,q:"有關卡爾文循環,下列敘述何者有誤?",o:["卡爾文循環是一種類似克氏循環的新陳代謝過程","是光合作用裡碳反應的一部分","反應場所為葉綠體內的受質(基質)","分為碳固定、還原與糖生成、二磷酸核酮糖再生三階段","整個循環是利用葡萄糖作為能量來源"],a:"E",c:"METAB"},
+{y:105,n:6,q:"有關單核苷酸多型性(SNP),下列敘述何者有誤?",o:["大多數SNP位在基因組的編碼區","SNP位於啟動子中可能導致基因轉錄活性改變","SNP篩檢已應用在遺傳疾病、藥學與腫瘤醫學","以胸腺嘧啶取代胞嘧啶的變異最常發生","在一族群中SNP是最普遍發生的一種遺傳變異"],a:"A",c:"GEN"},
+{y:105,n:7,q:"下列何者不被視作一種基因標記?",o:["限制性片段長度多型性(RFLP)","變異性重複序列(VNTR)","微衛星多型性","單核苷酸多型性","RNA干擾(RNAi)"],a:"E",c:"GEN"},
+{y:105,n:8,q:"下列4種生物的DNA中,每百萬鹼基對所含的基因密度由低至高排列:①大腸桿菌 ②酵母菌 ③水稻 ④人類",o:["④③②①","①②③④","①②④③","③④②①","①③②④"],a:"A",c:"GEN"},
+{y:105,n:9,q:"下列何者為保護生物多樣性的三階層?①生態系多樣性 ②群聚系多樣性 ③族群系多樣性 ④物種多樣性 ⑤基因多樣性",o:["①②④","②④⑤","②③④","①④⑤","①③④"],a:"D",c:"ECO"},
+{y:105,n:10,q:"有關2015年諾貝爾醫學獎得主大村智教授之得獎標的,下列敘述何者有誤?",o:["阿維菌素藉由干擾神經生理活動,釋放γ-胺基丁酸,對節肢動物的神經傳導有抑制作用","伊維菌素能大幅減少蟠尾絲蟲病與淋巴絲蟲病感染","阿維菌素為高效、廣譜的抗生素類殺蟲劑","伊維菌素對瘧原蟲有很高殺蟲活性","阿維菌素可由灰色鏈黴菌發酵產生"],a:"D",c:"ANIM"},
+{y:105,n:11,q:"一般而言,人類的視覺系統有多少種具有功能性的錐細胞(cone cell)?",o:["1種","3種","4種","5種","數百種"],a:"B",c:"ANIM"},
+{y:105,n:12,q:"在一個DNA分子中,若腺嘌呤(adenine)所佔百分比為32.8%,則鳥糞嘌呤(guanine)所佔百分比為何?",o:["67.2%","32.8%","17.2%","65.6%","100%"],a:"C",c:"GEN"},
+{y:105,n:13,q:"科學家在生物學上的貢獻,下列敘述何者有誤?",o:["Friedrich Miescher:從膿中分離出核素","Walther Flemming:描述有絲分裂","Robert Feulgen:藉由性染色體和性聯遺傳確定DNA在染色體上","Erwin Chargaff:證明A=T、G=C","Rosalind Franklin:拍攝出DNA的X光繞射影像"],a:"C",c:"GEN"},
+{y:105,n:14,q:"下列何者不是將外源基因轉殖入動物染色體的方法?",o:["原核顯微注射法","胚幹細胞載體法","精子載體法","反轉錄病毒感染法","農桿菌感染法"],a:"E",c:"GEN"},
+{y:105,n:15,q:"下列何者能分化為巨噬細胞的先驅細胞?",o:["單核細胞(monocyte)","B細胞","T細胞","紅血球","嗜酸性白血球"],a:"A",c:"IMM"},
+{y:105,n:16,q:"人類自中度運動轉為劇烈運動時,前15秒的能量主要從下列何種代謝方式獲得?",o:["麩胺酸的脫銨轉化反應","脂肪酸的有氧代謝","葡萄糖代謝產生的乳酸發酵機制","葡萄糖的有氧代謝","脂肪酸的無氧代謝"],a:"C",c:"METAB"},
+{y:105,n:17,q:"目前已知CO₂排放增加造成的海洋酸化現象,對海洋生物影響的敘述,何者有誤?",o:["二枚貝外殼剝蝕","頭足類動物背板(cuttlebone)的重量增加","硬骨魚仔魚的耳石變小","硬骨魚仔魚的泳動行為模式有顯著偏傾現象","海膽胚胎發育缺陷"],a:"C",c:"ECO"},
+{y:105,n:18,q:"下列何者不是細胞凋亡(apoptosis)造成的結果?",o:["HIV感染人體後,很多未受感染的白血球也會死亡","神經系統的退行性病變,如老年性癡呆","免疫系統的正常發育","細菌感染造成化膿","發育過程中眼睛玻璃體和晶狀體的細胞死亡"],a:"D",c:"CELL"},
+{y:105,n:19,q:"請選出描述近曲小管功能的最佳組合:①再吸收濾液中營養物 ②向管腔分泌H⁺、NH4⁺ ③分解濾液中有毒物質 ④轉運排出青黴素 ⑤尿液濃縮",o:["①③⑤","①②④","①②③⑤","②③⑤","③④⑤"],a:"B",c:"ANIM"},
+{y:105,n:20,q:"對於種化機制,下列敘述何者有誤?",o:["地理隔離導致的異域性種化","同域性種化無須地理隔離","大部分動物物種的起源可以追溯至多倍體種化現象的發生","雜交區域提供研究生殖隔離的機會","生殖隔離的演變造成族群分化"],a:"C",c:"EVO"},
+{y:105,n:21,q:"NDM-1可使細菌對抗生素產生抗藥性。此種酶能催化水解多種β-內醯胺類抗生素,可使下列何種作用機制的抗生素失效?",o:["干擾細菌細胞壁合成","破壞細菌細胞膜通透性/完整性","抑制細菌蛋白質合成","抑制DNA合成","抑制mRNA的轉錄"],a:"A",c:"DIV"},
+{y:105,n:22,q:"對於低互動型母親的幼鼠,長大後在新環境下容易恐懼焦慮,下列何者為造成此動物行為的最可能因素?",o:["認知","印記作用","習慣化","固定行為模式","基因與環境互動"],a:"E",c:"ECO"},
+{y:105,n:23,q:"水的何項特性明顯有利於體內的化學反應?",o:["流動性大","極性強","分子比熱大","有潤滑作用","本身參與化學反應"],a:"B",c:"CHEM"},
+{y:105,n:24,q:"光合作用研究中科學家和其貢獻,下列敘述何者有誤?",o:["T.W. Engelmann:利用水綿研究光波對植物光合作用的影響","Jan Ingenhousz:證明光合作用只發生在植物綠色部位且需陽光","C.B. van Niel:提出光合作用釋放的氧源於H2O而非CO2","F.F. Blackman:用同位素示蹤證明氧的來源","Peter Mitchell:發現葉綠體中電子傳遞產生ATP的機制"],a:"D",c:"METAB"},
+{y:105,n:25,q:"有關大腦皮層中央前迴(central anterior gyrus),下列敘述何者有誤?",o:["參與內臟疼痛感覺","參與吞嚥控制","位於額葉","參與語言發聲","參與面部表情控制"],a:"A",c:"ANIM"},
+{y:105,n:26,q:"一短日照植物臨界光週期是13小時,在下列何種情況下植物才會開花?",o:["14小時光照,隨後10小時夜長","10小時光照,隨後14小時夜長","12小時光照,12小時夜長,並在第18小時給一次紅光閃光","10小時光照,14小時夜長,並在第18小時給一次紅光閃光","12小時光照,12小時夜長,並順序給一次紅外線閃光和紅光閃光"],a:"B",c:"PLANT"},
+{y:105,n:27,q:"病原體入侵被巨噬細胞吞噬後,抗原與MHC結合形成抗原呈現細胞(APC),啟動的免疫反應中不包括下列何者?",o:["發炎反應","巨噬細胞與輔助T細胞相互作用","分泌IL-1與IL-2","T細胞活化產生記憶細胞(memory B cell),後者下次可識別病原體","產生更多胞殺T細胞"],a:"D",c:"IMM"},
+{y:105,n:28,q:"有關革蘭氏陽性菌的說明,下列敘述何者正確?",o:["只有少量磷壁酸","有脂多醣外膜","對青黴素不敏感","一般不產生外毒素","細胞壁的基本成分是肽聚醣"],a:"E",c:"DIV"},
+{y:105,n:29,q:"下列何者屬於RNA病毒?",o:["人類免疫缺乏病毒","疱疹病毒","腺病毒","B型肝炎病毒","天花病毒"],a:"A",c:"DIV"},
+{y:105,n:30,q:"有關瘦體素(leptin)的說明,下列敘述何者正確?",o:["由肝臟細胞分泌","刺激下視丘神經胜肽Y的分泌","增加身體的能量消耗","減少飽食感,促進進食","作用在皮層額葉區域可抑制食慾,並可增加能量消耗"],a:"C",c:"ANIM"},
+{y:105,n:31,q:"有關胃蛋白酶(pepsin)的說明,下列敘述何者有誤?",o:["可以完全地將蛋白質分解成胺基酸","於胃腔中形成","由胃黏膜主細胞所分泌","最適合反應的pH值大約為2","胃壁細胞上H⁺/K⁺幫浦的運作會影響胃蛋白酶活性"],a:"A",c:"ANIM"},
+{y:105,n:32,q:"葡萄糖以主動運輸方式由小腸絨毛細胞吸收時,通常伴隨何種離子的主動運輸?",o:["Na⁺","K⁺","Cl⁻","Ca²⁺","H⁺"],a:"A",c:"ANIM"},
+{y:105,n:33,q:"有關神經元或肌肉細胞的靜止膜電位,下列敘述何者正確?",o:["等於K⁺的平衡電位","等於Na⁺的平衡電位","比K⁺的平衡電位更偏向正","高於Na⁺的平衡電位","刺激不會改變靜止膜電位"],a:"C",c:"ANIM"},
+{y:105,n:34,q:"有關球狀囊(saccule)及橢圓囊(utricle),下列敘述何者有誤?",o:["兩者皆位於內耳","兩者皆與平衡感覺有關","兩者皆有毛細胞","兩者皆與神經動作電位傳導有關","兩者內部皆含有由磷酸鎂結晶而成的耳石"],a:"E",c:"ANIM"},
+{y:105,n:35,q:"下列激素何者可刺激蛋白質合成及脂肪分解?",o:["生長激素","甲狀腺素","胰島素","腎上腺素","昇糖素"],a:"A",c:"ANIM"},
+{y:105,n:36,q:"有關鈉鉀幫浦的說明,下列敘述何者正確?",o:["Na⁺以主動運輸的方式進入細胞","K⁺以主動運輸的方式離開細胞","此幫浦每次運作所運送的Na⁺和K⁺數目相等","所有動物細胞中的鈉鉀幫浦都必須持續不斷的運作","鈉鉀幫浦的運作與其他離子的運輸無關"],a:"D",c:"CELL"},
+{y:105,n:37,q:"有關星狀膠細胞(astrocyte)的說明,下列敘述何者有誤?",o:["能從突觸擷獲神經傳遞物質","對神經元產生刺激或抑制反應","具有在中樞神經系統中進行吞噬外來入侵物質的防禦機制","形成血腦障蔽","具備儲存肝醣的功能"],a:"C",c:"ANIM"},
+{y:105,n:38,q:"下列何種細胞的損傷將降低周邊神經系統動作電位的傳導?",o:["星狀膠細胞","微膠細胞","寡樹突膠細胞","許旺氏細胞","室膜細胞"],a:"D",c:"ANIM"},
+{y:105,n:39,q:"有關腦垂腺後葉的說明,下列敘述何者正確?",o:["由胚胎口腔上皮衍生而來","分泌生長激素和泌乳素","不能產生激素","與個體水分與離子的平衡調控無關","受到下視丘釋放激素的刺激而分泌激素"],a:"C",c:"ANIM"},
+{y:105,n:40,q:"陸生動物循環系統演化中,下列何者不是用來克服重力作用的演化?",o:["心臟動力加大,打出總血量增加","心臟分化出兩心房兩心室,動脈血和靜脈血分開","血液循環分成肺循環和體循環,增加血流速度","靜脈血的血壓接近零","微血管中血液流速穩定的流動"],a:"D",c:"ANIM"},
+{y:105,n:41,q:"DNA重組技術所生產的蛋白質中,下列何者不適合以大腸桿菌生產?",o:["人類胰島素","人類生長激素","B型肝炎疫苗","紫杉醇","豬的生長賀爾蒙"],a:"C",c:"GEN"},
+{y:105,n:42,q:"下列何者不屬於結締組織?",o:["脂肪組織","骨頭","軟骨組織","血液","骨骼肌"],a:"E",c:"ANIM"},
+{y:105,n:43,q:"何種抗體未能與描述吻合?(綜合促進凝集、體液主要、體外分泌、釋出組織胺、新生兒母乳獲得、第I型過敏、血清最高、通過胎盤、最早合成)",o:["IgE","IgG","IgM","IgD","IgA"],a:"D",c:"IMM"},
+{y:105,n:44,q:"下列何者不是哈溫法則的基礎假設?",o:["族群非常大,交配是隨機的","族群之間沒有發生任何遷移","天擇對等位基因不產生影響","任何突變可以被忽略","生物演化作用明顯"],a:"E",c:"EVO"},
+{y:105,n:45,q:"如果人體無法得到足夠的維生素D,則會發生:",o:["血鈣濃度增加","破骨細胞活性受抑制","副甲狀腺素分泌降低","小腸無法吸收鈣及磷酸鹽","神經細胞軸突退化"],a:"D",c:"ANIM"},
+{y:105,n:46,q:"有關人類的多發性硬化症,下列敘述何者正確?",o:["在病理診斷上屬於急性,且好發於20-40歲的神經增生性疾病","會引發免疫系統的誘發與攻擊","會破壞中樞神經系統區域的室膜細胞","與個體的基因調控與功能性無關","會攻擊周邊神經系統的許旺氏細胞"],a:"B",c:"IMM"},
+{y:105,n:47,q:"以下動物何者屬於原口類生物(protostomes)?",o:["海膽","文昌魚","八目鰻","虎斑烏賊","鯊魚"],a:"D",c:"DIV"},
+{y:105,n:48,q:"有關骨骼肌的收縮過程,下列順序何者正確?①運動神經受刺激 ②去極化沿T小管散佈 ③運動終板電位產生 ④乙醯膽鹼釋出 ⑤ATP分解 ⑥鈣離子由肌漿網釋放 ⑦肌動蛋白與肌凝蛋白結合",o:["①④③②⑥⑤⑦","②①④⑥③⑤⑦","③②①④⑥⑦⑤","②①③④⑥⑦⑤","②③①④⑥⑤⑦"],a:"A",c:"ANIM"},
+{y:105,n:49,q:"有關胰島素的說明,下列敘述何者有誤?",o:["與第一型糖尿病成因無關","是因血糖升高而分泌","刺激肝醣和脂肪的合成","能跨越血腦障蔽","主要由蘭氏小島β細胞分泌"],a:"A",c:"ANIM"},
+{y:105,n:50,q:"有關動作電位的傳導說明,下列敘述何者有誤?",o:["軸突上一個位置的動作電位,會作為下一段位置產生動作電位的去極化刺激","在有髓鞘的軸突中,動作電位僅在蘭氏結產生","在無髓鞘的軸突中,動作電位沿著軸突產生","由與神經元接壤的軸丘處所啟動","無髓鞘的軸突比有髓鞘的軸突傳導動作電位速度快"],a:"E",c:"ANIM"},
+
+/* ============= 106 學年度 ============= */
+{y:106,n:1,q:"就河流生態系而言,下列何者不屬於河流的生態系統服務?",o:["為野生動物提供棲地","淨化水質","更新與再滋養鄰近濕地","去除累積在河口三角洲的淤泥","向鄰近沿海地區提供養分供給以維持漁業"],a:"D",c:"ECO"},
+{y:106,n:2,q:"關於物種滅絕或生態系統服務退化的敘述,下列何者錯誤?",o:["比較去除入侵種和控制引入外來種,去除入侵種比較容易成功","植物授粉者(如蜜蜂)族群數量持續下降,可能會破壞糧食生產","當棲地破壞導致族群下降時,島嶼分布物種較大陸物種易滅絕","因具有巨額利益,致使有組織犯罪涉入非法野生動物盜獵與走私","過往的大滅絕事件是由環境急劇變化導致的自然現象所造成"],a:"A",c:"ECO"},
+{y:106,n:3,q:"下列何者是造成珊瑚白化之兩個最大的長期威脅?",o:["海洋酸化和過度捕撈","潛水人員和捕食者的危害","氣候變遷和海洋酸化","海岸侵蝕和海平面上升","氣候變遷和捕食者的危害"],a:"C",c:"ECO"},
+{y:106,n:4,q:"有關氣候與生物多樣性的敘述,下列何者正確?",o:["溫室效應完全直接由人類活動所造成","熱量在陸地吸收和釋放較水域緩慢","多肉植物通常分布在溫帶森林","落葉林通常分布於比針葉林更高的海拔高度","沙漠在晚間較涼爽,是因為沙漠土壤裸露而多無植被或濕度可幫助儲存熱量"],a:"E",c:"ECO"},
+{y:106,n:5,q:"兩個以上物種競爭相同資源時,下列何種作用可以減少競爭現象?",o:["共生","資源分隔","競爭排除","擬態","偽裝"],a:"B",c:"ECO"},
+{y:106,n:6,q:"假設鐮刀血球症在非裔美國人新生兒發生率為每1百萬人中出現144人,則攜帶者比例為何?",o:["0.0144%","1.2%","1.1856%","2.3712%","4.7424%"],a:"D",c:"EVO"},
+{y:106,n:7,q:"承上題,在非裔美國人族群中,正常血紅蛋白對偶基因的比例,下列何者正確?",o:["96.4%","97.456%","97.6%","98.8%","99.856%"],a:"D",c:"EVO"},
+{y:106,n:8,q:"下列何者最可能在DNA產生變異時,造成蛋白質中連續多個胺基酸一起改變?",o:["鹼基置換","鹼基轉位","框移突變","重組染色體","點突變"],a:"C",c:"GEN"},
+{y:106,n:9,q:"假設人類隱性遺傳疾病由t對偶基因控制,T為正常,依譜系分析,下列何者為第一代基因型組合?",o:["TT × TT","TT × Tt","Tt × Tt","TT × tt","Tt × tt"],a:"C",c:"GEN"},
+{y:106,n:10,q:"承上題,下列何者分別為個體甲、乙和丙的基因型?",o:["TT、TT和TT","TT、TT和Tt","TT、Tt和Tt","Tt、Tt和Tt","Tt、Tt和TT"],a:"D",c:"GEN"},
+{y:106,n:11,q:"有關DNA突變的敘述,下列何者正確?",o:["吖啶橙(acridine orange)是一種烷基化劑","誤義突變(missense mutation)導致過早的胜肽鏈終止","嘧啶二聚體多由2-氨基嘌呤誘變劑造成","波長愈長的輻射波愈易造成DNA的損壞","製後修復是指DNA複製後對損傷的DNA進行修復"],a:"E",c:"GEN"},
+{y:106,n:12,q:"有關分子同源性(molecular homology)的敘述,下列何者正確?",o:["經由比對不同物種的旁系同源基因序列直接獲得訊息","經由比對得知不同物種由共同祖先或互相關連的共同祖先群體演化而來","經由比對不同物種的不同生化代謝路徑直接獲得訊息","經由比對不同物種染色體上的基因位置直接獲得訊息","經由比對不同物種在發育過程中蛋白質的修飾作用直接獲得訊息"],a:"B",c:"EVO"},
+{y:106,n:13,q:"有關植物生活史的敘述,下列何者錯誤?",o:["世代交替是植物所特有的現象","精子是由antheridium產生","蕨類植物和種子植物統稱為euphyllophytes","配子體不會發生減數分裂","苔蘚的精子具有鞭毛,需要水為媒介傳播"],a:"A",c:"PLANT"},
+{y:106,n:14,q:"有關細胞的敘述,下列何者正確?",o:["肌凝蛋白是沿著中間絲移動的運動蛋白","真核細胞的鞭毛結構為由9+1排列的軸絲組成","物質經由胞飲作用和胞吐作用進出細胞核","溶酶體和過氧化體兩種胞器皆可進行細胞中有害物質的解毒","醣質包被對於細菌是一種保護性塗層,可避免細菌脫水和被宿主生物體破壞"],a:"E",c:"CELL"},
+{y:106,n:15,q:"有關真菌孢子的敘述,下列何者正確?",o:["有性孢子和無性孢子都是單倍體","有性孢子和無性孢子都是二倍體","有性孢子是單倍體,無性孢子是二倍體","有性孢子是二倍體,無性孢子是單倍體","單倍體無性孢子融合形成二倍體有性孢子"],a:"A",c:"DIV"},
+{y:106,n:16,q:"在未風化的火成岩中,檢測到含有0.0125g的鉀-40和0.0875g的氬-40,已知鉀-40半衰期為13億年,則此火成岩推估生成年代為何?",o:["3.25億年前","6.5億年前","13億年前","26億年前","39億年前"],a:"E",c:"EVO"},
+{y:106,n:17,q:"金魚草族群中花色紅、粉紅、白三種,數量45、210、245株,由CRCR、CRCW、CWCW控制,則CR和CW頻度分別為何?",o:["0.1和0.9","0.3和0.7","0.4和0.6","0.7和0.3","0.9和0.1"],a:"B",c:"EVO"},
+{y:106,n:18,q:"承上題,若將白色花外表型的個體完全移除,則CR和CW對偶基因的頻度分別為何?",o:["0.1765和0.8235","0.3和0.7","0.4118和0.5882","0.5882和0.4118","0.8235和0.1765"],a:"D",c:"EVO"},
+{y:106,n:19,q:"承17題,若再加入300株紅色金魚草,則CR和CW對偶基因的頻度分別為何?",o:["0.1765和0.8235","0.3532和0.6468","0.4313和0.5687","0.5625和0.4375","0.7332和0.2668"],a:"D",c:"EVO"},
+{y:106,n:20,q:"有關古細菌(archaea)和細菌(bacteria)的敘述,下列何者錯誤?",o:["古細菌中具有容忍或者需要高鹽度環境的類型稱為嗜鹽生物","異型細胞是藍綠菌具有固氮能力的特化細胞","大多數嗜極端生物屬於細菌","粒線體起源的假說推測由α-變型菌經由內共生而形成","Methanotrophs又稱methanophiles,是以代謝甲烷作為碳和能量唯一來源的原核生物"],a:"C",c:"DIV"},
+{y:106,n:21,q:"下列分類群中的部份物種,何者不屬於微型浮游生物(nanoplankton)的一部分?",o:["鞭毛蟲","介形綱","甲藻","黃藻","金黃藻"],a:"B",c:"DIV"},
+{y:106,n:22,q:"大學生感染肺結核菌,腎上腺皮質層也受感染破壞,該生所呈現的變化何者錯誤?",o:["血中鉀離子濃度上升","血中鈉離子濃度下降","血中pH值下降","皮膚呈現暗黑","血中尿素氮濃度下降"],a:"E",c:"ANIM"},
+{y:106,n:23,q:"在世代交替現象中,下列哪一分類群的配子體可以獨立生存?",o:["蕨類植物","單子葉植物","雙子葉植物","松柏類","銀杏"],a:"A",c:"PLANT"},
+{y:106,n:24,q:"假設一植物在晚間開白色花,花朵具有蜜腺位於細長花冠筒的基部,下列何者可能為此植物的授粉者?",o:["birds","moths","butterflies","honey bees","bumblebees"],a:"B",c:"PLANT"},
+{y:106,n:25,q:"有關真菌的敘述,下列何者正確?",o:["真菌的所有物質在兩個菌絲細胞間,須經由擴散通過中隔","分生孢子是蕈菇類產生的有性孢子","地衣是單系群的生物","地衣中的真菌和其共生藻類具高度共同演化","許多子囊菌和擔子菌失去有性生殖的能力"],a:"E",c:"DIV"},
+{y:106,n:26,q:"有關植物的敘述,下列何者錯誤?",o:["玉米種子只有一枚子葉","植物根的成熟區緊鄰根尖分生組織","植物細胞擴展的方向取決於細胞壁中纖維素微纖維的排列方式","植物的基本組織位於表皮組織和維管束組織之間","根毛分布於根的成熟區"],a:"B",c:"PLANT"},
+{y:106,n:27,q:"下列敘述何者正確?",o:["蛋白質的訊號胜肽在轉譯初期時,會與位在內質網膜上的SRP結合而暫停轉譯過程","蛋白質上的訊號胜肽會被一個結合在內質網膜外的signal peptidase切除","所有蛋白質的訊號胜肽之胺基酸序列皆相同","帶有NLS的蛋白質一定位於細胞核中","升糖素在合成過程中,曾帶有蛋白質的訊號胜肽"],a:"E",c:"CELL"},
+{y:106,n:28,q:"下列哪些物質可作為糖質新生(gluconeogenesis)的原料?甲白胺酸 乙離胺酸 丙精胺酸 丁甘油 戊脂肪酸",o:["甲乙","乙丙","丙丁","丁戊","戊甲"],a:"C",c:"METAB"},
+{y:106,n:29,q:"有關primary mRNA進行轉錄後基因調控的敘述,下列何者錯誤?",o:["primary mRNA被轉錄後會進行capping,以5'-5'的連結加上G,可防止5'被外核苷酸酶降解","Group I內含子進行剪切作用時,第一個轉酯作用是利用外加的G開始反應","Group II內含子進行剪切作用時,第一個轉酯作用是利用內在的A開始反應","利用spliceosome進行剪切作用的轉酯作用中,會有RNA 5'-5'連結的過程發生","primary mRNA要進行polyadenylation時,辨識的專一訊號主要是AAUAAA的核苷酸序列"],a:"D",c:"GEN"},
+{y:106,n:30,q:"下列敘述何者錯誤?",o:["蘭氏小島β細胞因應血糖上升,可使存於細胞囊泡中的胰島素釋出於血液中","腎上腺皮質細胞因應ACTH刺激,可使cortisol釋出於血液中","腎上腺髓質細胞因應ACTH刺激,可使腎上腺素釋出於血液中","副甲狀腺腺體細胞因應血鈣降低,可使副甲狀腺素釋出於血液中","神經細胞因應刺激產生動作電位後,可使突觸末端囊泡中的神經傳導物質釋出於突觸裂隙中"],a:"C",c:"ANIM"},
+{y:106,n:31,q:"葡萄糖代謝路徑中,經電子傳遞鏈最後產生ATP的過程,下列何者錯誤?",o:["ATP合成酶可被一種稱為魚藤酮的藥物所抑制","粒線體內膜的電子傳遞過程中,氫離子被運送至粒線體內膜與外膜的空間","粒線體合成的ATP可被運送蛋白送至細胞質","NAD⁺由維生素B3衍生而來","FAD由維生素B2衍生而來"],a:"A",c:"METAB"},
+{y:106,n:32,q:"小明中餐只吃薯條,量測其餐後代謝的呼吸熵(RQ)為0.85,則攝入的碳水化合物與脂肪的百分比各為多少?(葡萄糖RQ=1、脂肪RQ=0.7)",o:["碳水17%,脂肪83%","碳水43%,脂肪57%","碳水50%,脂肪50%","碳水57%,脂肪43%","碳水83%,脂肪17%"],a:"C",c:"METAB"},
+{y:106,n:33,q:"有關脂肪酸代謝過程的敘述,下列何者錯誤?",o:["非磷酸化的acetyl-CoA carboxylase(ACC)是處於活化的狀態","ACC活化時可將acetyl CoA轉變成malonyl CoA","malonyl CoA為脂肪酸合成過程的中間產物","malonyl CoA濃度上升時,會刺激CPT(carnitine palmitoyltransferase)的作用","活化細胞內cAMP/PKA的傳遞路徑可將ACC加以磷酸化"],a:"D",c:"METAB"},
+{y:106,n:34,q:"下列何者是RNA可以做為酵素(ribozyme)所催化的反應?",o:["以RNA為模板合成DNA時","以RNA為模板複製RNA時","tRNA與胺基酸形成共價結合時","將外顯子中的核苷酸進行甲基化時","轉譯過程中胺基酸形成胜肽鍵時"],a:"E",c:"GEN"},
+{y:106,n:35,q:"下列何者為人類肌肉細胞基因中內含子(intron)之固定特徵?",o:["5'端第一個鹼基為G,第二個鹼基為A","從3'端倒數第一個鹼基為A,倒數第二個為G","5'端第一個鹼基為A,第二個為G","從3'端倒數第一個鹼基為G,倒數第二個為A","距離3'端約20-50個鹼基處有個鹼基G,稱為分支點"],a:"D",c:"GEN"},
+{y:106,n:36,q:"假設一個蛋白質處於有功能的狀態時,總是緊靠在細胞膜內側,且可隨膜的位移而移動,這個蛋白質最可能具有的轉譯後修飾為:甲methylation 乙myristylation 丙farnysylation 丁acetylation 戊sumoylation 己ubiquinlation",o:["甲乙","乙丙","丙丁","丁戊","戊己"],a:"B",c:"GEN"},
+{y:106,n:37,q:"有關膽固醇、LDL和HDL的敘述,下列何者錯誤?",o:["血液中LDL可與細胞的LDLR結合,經胞飲作用進入細胞","家族性高膽固醇血症有一類是因LDLR的基因缺陷所導致","肝臟可將膽固醇經由合成膽汁,分泌到腸胃道排出","血液LDL中的膽固醇含量比例較HDL中的高","血液HDL中的酯化膽固醇含量比例較LDL中的高"],a:"E",c:"METAB"},
+{y:106,n:38,q:"下列敘述何者錯誤?",o:["一氧化碳與血紅素鐵離子的親和性,比氧高200倍左右","一氧化碳可抑制細胞中粒線體電子傳遞鏈的cytochrome C oxidase","一氧化氮透過刺激血管平滑肌細胞中PDE的活性使肌肉放鬆","一氧化氮可由血管內皮細胞產生","一氧化氮的合成是以精氨酸及氧為原料,經一氧化氮合成酶催化"],a:"C",c:"ANIM"},
+{y:106,n:39,q:"有關心臟的敘述,下列何者正確?",o:["迷走神經分泌乙醯膽鹼,可經由GPCR等訊息傳遞,使心肌細胞鉀離子通道打開","心臟肌肉間有tight junction,可輔助整個心房或心室得以一起收縮","心肌準備開始收縮時,需要來自心肌肌漿網內鈣離子釋放的誘發","心肌同骨骼肌也會發生完全強直收縮","心房細胞會因應血中鈉離子濃度的下降而分泌ANP"],a:"A",c:"ANIM"},
+{y:106,n:40,q:"下列何者是HIV病毒主要感染的免疫細胞?甲胞殺T 乙NK 丙Th1 丁Th2 戊記憶 己樹突",o:["甲乙","乙丙","丙丁","丁戊","戊己"],a:"C",c:"IMM"},
+{y:106,n:41,q:"遺傳到BRCA1抑癌基因缺陷者,易導致乳癌發生,這是因為此基因主要參與下列何種DNA修復系統?",o:["雙股斷裂修復(DSBR)","錯誤配對切除修復(MMR)","核苷酸切除修復(NER)","單一鹼基切除修復(BER)","非同源性末端接合(NHEJ)"],a:"A",c:"GEN"},
+{y:106,n:42,q:"下列敘述何者錯誤?",o:["白胺酸為人體必需胺基酸之一","酪胺酸為人體非必需胺基酸之一","離胺酸為人體必需胺基酸之一","麩胺酸為人體非必需胺基酸之一","亞麻油酸為人體非必需脂肪酸之一"],a:"E",c:"CHEM"},
+{y:106,n:43,q:"下列敘述何者錯誤?",o:["CRISPR是源自於細菌對於病毒入侵時所具有的適應性免疫能力","傳統基因剔除技術原理包含利用胚胎幹細胞具同源重組的能力","Cre-loxP基因剔除的技術原理中,牽涉了酵素對DNA迴文序列的辨識","應用siRNA的原理,可將一段約19-21個核苷酸的DNA直接轉殖入細胞,使其與標的mRNA結合","CRISPR/Cas9基因編輯技術原理中,有一步驟是約20個核苷酸的RNA會與標的DNA結合"],a:"D",c:"GEN"},
+{y:106,n:44,q:"動物細胞利用下列何種組合來進行有絲分裂過程中的胞質分裂?甲actin 乙lamin 丙microtubule 丁dynein 戊myosin",o:["甲乙","乙丙","丙丁","丁戊","戊甲"],a:"E",c:"CELL"},
+{y:106,n:45,q:"有關腎元功能的敘述,下列何者錯誤?",o:["近端小管中的水分子可被動地回收","亨耳氏小管細下降端中的水分子可被動地回收","亨耳氏小管粗上升端中的水分子可被動地回收","遠端小管中的NaCl可主動地回收","集尿管中的水分子可被動地回收"],a:"C",c:"ANIM"},
+{y:106,n:46,q:"有關引起癌症的敘述,下列何者錯誤?",o:["與染色體結構相關的表位基因改變不會導致癌症","Warburg effect是指不論在有無氧氣存在的環境下,癌細胞都傾向將葡萄糖代謝成乳酸","Rb基因是一種抑癌基因","前致癌基因可因點突變而變成致癌基因","會導致癌症的基因包括microRNA"],a:"A",c:"GEN"},
+{y:106,n:47,q:"有關人體大腸生理的敘述,下列何者錯誤?",o:["排便反射指的是直腸壁被擴張時,刺激交感神經,進而引發的反射動作","胃壁受膨脹可引起胃結腸反射","十二指腸結腸反射乃因腸壁膨脹引發團塊運動","大腸中的細菌可產生維生素B12及K","成人肛門的內括約肌因被擴張會引起便意,但可受外括約肌隨意控制"],a:"A",c:"ANIM"},
+{y:106,n:48,q:"有關肺臟生理及功能的敘述,下列何者錯誤?",o:["肺動脈血液中二氧化碳分壓約為46 mmHg","主動脈血液中二氧化碳分壓約為40 mmHg","肺臟分泌ACE可將angiotensinogen轉變成angiotensin I","肺泡表面張力劑用以降低肺泡的表面張力,主要成分為磷脂質","身體呈現代謝性偏酸時,肺臟會增加換氣速率"],a:"C",c:"ANIM"},
+{y:106,n:49,q:"小明被帶有革蘭氏陰性菌的針頭劃傷感染,下列何者錯誤?",o:["感染部位會活化免疫細胞中包括NF-κB的路徑,導致發炎反應","革蘭氏陰性菌的細胞壁成分可引起人體先天免疫反應","感染部位的細胞會產生前列腺素","感染部位會活化TOLL-like receptor路徑,導致發炎反應","此細菌的脂多醣(LPS)是一種細菌的外毒素"],a:"E",c:"IMM"},
+{y:106,n:50,q:"對於懷孕時期雌性素(estrogens)功能的敘述,下列何者錯誤?",o:["刺激外陰部的擴增","降低對催產素的敏感性,可防止早產","刺激子宮肌肉層持續生長,為將來生產時準備","與relaxin一同作用使pelvic ligaments軟化及放鬆","刺激乳腺的alveoli及ductal系統更進一步發育"],a:"B",c:"ANIM"},
+
+/* ============= 107 學年度(精選) ============= */
+{y:107,n:2,q:"植物為了加快水分蒸散,可藉由分泌_____,促使保衛細胞內的______離子流出而濃度降低,導致氣孔關閉。空格內應填入哪個選項最恰當?",o:["離層酸、鉀","離層酸、鈉","離層酸、氯","乙烯、鈉","乙烯、鉀"],a:"A",c:"PLANT"},
+{y:107,n:3,q:"有關光敏素(phytochrome)的敘述,何者正確?",o:["有Pr和Pfr兩種形式,其中Pr具活性,Pfr不具活性","屬於植物激素,具調節植物開花與否的功能","屬於植物色素,能使植物呈現綠色","當細胞內的[Pfr]>[Pr]時,會促進長日照植物開花","當[Pr]減少時會引起植物休眠"],a:"D",c:"PLANT"},
+{y:107,n:6,q:"人體心臟內構造在傳導心臟收縮電訊號的正確次序為何?甲房室結 乙竇房結 丙浦金氏纖維 丁房室束",o:["甲乙丙丁","甲乙丁丙","甲丙乙丁","乙甲丁丙","乙甲丙丁"],a:"D",c:"ANIM"},
+{y:107,n:8,q:"人類腎臟中的近曲小管及遠曲小管均可進行再吸收作用,下列敘述何者錯誤?",o:["鈉、碳酸氫根可在近曲小管被再吸收","鈉、碳酸氫根可在遠曲小管被再吸收","鈉、碳酸氫根、鉀可在近曲小管及遠曲小管被再吸收","鉀、葡萄糖可在近曲小管被再吸收","碳酸氫根、胺基酸可在近曲小管被再吸收"],a:"C",c:"ANIM"},
+{y:107,n:9,q:"人類精、卵細胞均經由生殖細胞減數分裂後形成。下列何者只發生在第一次減數分裂?",o:["細胞核膜及核仁解體消失","紡錘絲由兩組中心體共同產生紡錘體","染色體分離後細胞質進行等量分配","同源染色體互相配對並排列在赤道板上","姊妹染色分體互相分離向細胞兩極移動"],a:"D",c:"GEN"},
+{y:107,n:11,q:"按順序配對(維生素A、B12、C、D、K)缺乏所造成之疾病:甲夜盲 乙惡性貧血 丙壞血症 丁佝僂 戊凝血異常",o:["甲乙丙丁戊","乙丙甲丁戊","甲丁丙乙戊","甲戊乙丁丙","甲丙乙丁戊"],a:"A",c:"ANIM"},
+{y:107,n:16,q:"下列何者可引發波爾氏移轉(Bohr shift)反應?",o:["貧血","體溫上升","血氧濃度增加","血液中碳酸濃度增加","血液中2,3-DPG濃度增加"],a:"D",c:"ANIM"},
+{y:107,n:17,q:"常用抗憂鬱症藥物百憂解(Prozac),在中樞神經系統的突觸傳遞過程中之主要作用機制為?",o:["促進多巴胺釋放","抑制多巴胺釋放","促進血清素釋放","抑制血清素回收","促進血清素合成"],a:"D",c:"ANIM"},
+{y:107,n:19,q:"Klüver-Bucy症候群病患不易對危險事物建立新恐懼記憶,主要受損構造為?",o:["海馬迴","下視丘","杏仁核","基底核","前額葉"],a:"C",c:"ANIM"},
+{y:107,n:20,q:"松露是真菌的球狀子實體,菌絲包覆松樹根協助松樹吸收水分礦物質,松樹則提供其生長養分。下列哪一組生物的關係最相似?",o:["跳蚤與田鼠","山蘇與樟樹","牛樟芝與牛樟","根瘤菌與大豆","小花蔓澤蘭與榕樹"],a:"D",c:"ECO"},
+{y:107,n:21,q:"將六種激素分成兩大類:I(雌二醇、可體松、甲狀腺素)、II(抑制泌乳激素釋放激素、抑制生長激素釋放因子、胰島素),最可能的分類依據為?",o:["是否為固醇類激素","是否為胜肽類激素","是否受到腦垂腺的激素所調控","是否會降低人體內血糖值","是否在細胞質內有其可結合的受體"],a:"E",c:"ANIM"},
+{y:107,n:24,q:"某林地受DDT污染,四種生物甲乙丙丁濃度1.9、0.4、17.0、6.5 ppm,何者最可能為食物鏈順序?",o:["甲→乙→丙→丁","乙→甲→丁→丙","丙→丁→甲→乙","丁→丙→乙→甲","乙→丁→甲→丙"],a:"B",c:"ECO"},
+{y:107,n:28,q:"豌豆植株高(T)矮(t)、種子黃(Y)綠(y)。後代:高黃291、矮綠102。下列何者最可能是親代基因型?",o:["TtYY × Ttyy","TTyy × TTYy","TtYy × TTYy","TtYy × TtYy","TTyy × ttYY"],a:"D",c:"GEN"},
+{y:107,n:35,q:"植物根部會酸化其周遭土壤,主要是因為釋出哪些化學物質所致?",o:["P與K⁺","CO2與K⁺","CO2與Na⁺","N與Na⁺","CO2與H⁺"],a:"E",c:"PLANT"},
+{y:107,n:37,q:"異域種化(allopatric speciation)是新物種形成的一種方式,下列何者是最重要的條件?",o:["完全的地理隔絕","遺傳漂變","個體突變機率的差異","生殖隔離","族群個體在環境中不平均分布"],a:"A",c:"EVO"},
+{y:107,n:41,q:"下列情況何者最可能讓大腸桿菌色胺酸抑制子(trp repressor)阻斷色胺酸操作子的轉錄?",o:["色胺酸與色胺酸抑制子結合","色胺酸與色胺酸抑制子不結合","色胺酸抑制子與乳糖操作子結合後","色胺酸抑制子與誘導子結合時","色胺酸與乳糖操作子結合時"],a:"A",c:"GEN"},
+{y:107,n:46,q:"端酶(telomerase)特性的敘述,何者最恰當?",o:["可鍵結複製後缺失的5'端DNA,防止被核酸酶降解","可協助折疊染色體末端單股DNA讓其補足並複製","具有3'端至5'端的DNA聚合酶特性,可合成端粒所缺DNA","在正常體細胞內活性略小於生殖細胞","會結合其特殊的RNA,以合成端粒上所缺DNA片段"],a:"E",c:"GEN"},
+{y:107,n:50,q:"人類因紫外線照射產生皮膚細胞DNA損害,最可能產生什麼現象?並利用什麼機制降低傷害?",o:["DNA單股斷裂/錯配修復","DNA雙股斷裂/非同源末端接合修復","DNA雙股斷裂/同源重組修復","DNA兩股鏈結/錯配修復","胸腺嘧啶二聚體/核苷酸移除修復"],a:"E",c:"GEN"},
+
+/* ============= 108 學年度(精選) ============= */
+{y:108,n:1,q:"AAbb母本×aaBB父本所產生的F1再進行試交,Aa和Bb二基因座完全不連鎖時,子代基因型組合最可能?",o:["AaBB、AaBb、aaBB、aaBb","AAbb、AaBb、aaBB、aabb","Aabb、AaBB、aaBb、aabb","AABb、AAbb、aaBb、aabb","AaBb、Aabb、aaBb、aabb"],a:"E",c:"GEN"},
+{y:108,n:4,q:"F1子代和原父本AAbb進行雜交,結果AABb:AAbb:AaBb:Aabb=304:824:809:363,推測Aa和Bb具連鎖,重組頻率最接近?",o:["13.2%","15.8%","29.0%","35.2%","49.1%"],a:"C",c:"GEN"},
+{y:108,n:5,q:"美國緬因州春天,雄性大角麋鹿闖入放牧場對雌乳牛呼喚試圖交配,但生殖器無法相容。此種生殖隔離類型?",o:["時間隔離","機械隔離","配子隔離","行為隔離","棲地隔離"],a:"B",c:"EVO"},
+{y:108,n:6,q:"檸檬酸循環中,某二化合物會分解釋放二分子CO2,有關此二化合物何者最正確?",o:["檸檬酸鹽、異檸檬酸鹽","α-酮戊二酸鹽、琥珀酸輔酶A","琥珀酸鹽、延胡索酸鹽","琥珀酸輔酶A、琥珀酸鹽","異檸檬酸鹽、α-酮戊二酸鹽"],a:"E",c:"METAB"},
+{y:108,n:7,q:"Agrobacterium tumefaciens可利用將一種植物基因帶到另一種植物基因組中。這種現象在自然界亦會發生,何者最可能?",o:["垂直演化","外顯子重新排列","退化轉移","轉位","水平基因轉移"],a:"E",c:"GEN"},
+{y:108,n:8,q:"人體中肌紅蛋白和血紅蛋白的編碼基因皆來自共同祖先基因,且存在於人體基因組,此基因關係的類型最可能?",o:["直系基因(orthologous)","同功基因","旁系基因(paralogous)","同源異型基因","偽基因"],a:"C",c:"EVO"},
+{y:108,n:11,q:"親緣關係樹和化石證據關聯分析後,化石定年與分子分支長度具正相關,可推斷親緣關係樹與物種演化時間,此分子時鐘的可信賴度最主要取決於下列何種突變的速率?",o:["有利的突變","非同義突變","中性突變","無義突變","錯義突變"],a:"C",c:"EVO"},
+{y:108,n:13,q:"天擇作用中,具中間型性狀個體獲較高繁殖成功率,二極端值性狀個體繁殖成功率低。此現象最符合下列何種天擇?",o:["方向性天擇","穩定型天擇","分裂型天擇","純化型天擇","頻率依存型天擇"],a:"B",c:"EVO"},
+{y:108,n:16,q:"鐮刀狀細胞貧血症在β-球蛋白基因發生突變導致,有關此突變的類型最可能?",o:["同義突變","靜默突變","無義突變","閱讀框架移動","錯義突變"],a:"E",c:"GEN"},
+{y:108,n:17,q:"一年輕男性核型分析具有一個巴爾氏體(Barr body),最可能患有的疾病?",o:["克萊恩斐特氏症","透納氏症","唐氏症","三X染色體症","二Y染色體症"],a:"A",c:"GEN"},
+{y:108,n:19,q:"動物免疫系統中,受傷區域的發炎反應初始階段參與的細胞和訊息分子最正確?",o:["吞噬細胞和溶菌酶","吞噬細胞和細胞介素","樹突細胞和干擾素","淋巴球和干擾素","肥大細胞和組織胺"],a:"E",c:"IMM"},
+{y:108,n:23,q:"胰島素被分泌後作用於肌肉細胞以增加葡萄糖攝取的訊息傳導類型,最可能?",o:["細胞間訊息傳導","內分泌訊息傳導","旁分泌訊息傳導","自分泌訊息傳導","共分泌訊息傳導"],a:"B",c:"ANIM"},
+{y:108,n:27,q:"50個體取樣:25 AA、15 aa、10 Aa,經一次隨機配對後的異型合子頻度最接近?",o:["20%","24%","40%","48%","60%"],a:"D",c:"EVO"},
+{y:108,n:29,q:"下列何種細胞構造主要參與肝臟解毒作用,在肝細胞中含量豐富?",o:["溶體","高爾基體","核膜","粗糙內質網","平滑內質網"],a:"E",c:"CELL"},
+{y:108,n:30,q:"長春花鹼(vinblastine)是抑制微管聚合的藥物,以長春花鹼處理癌細胞時,癌細胞無法_____。下列何者最適合?",o:["保持細胞核形狀","利用變形蟲運動移轉","在細胞分裂時分離染色體","維持胞質循流","在細胞分裂期間形成卵裂溝"],a:"C",c:"CELL"},
+{y:108,n:31,q:"咖啡因是磷酸二酯酶的抑制劑,因此最近常喝咖啡的人細胞中下列何種分子的含量會增加?",o:["磷酸化蛋白質","cAMP","腺苷酸環化酶","活化的G蛋白","G蛋白偶聯受體"],a:"B",c:"CELL"},
+{y:108,n:37,q:"仙人掌刺尖銳度由S(顯性)、N(有刺)控制,SsNn自花授粉後代外表型比例最接近?",o:["3/4尖刺:1/4無刺","1/4尖刺:1/2鈍刺:1/4無刺","1/4尖刺:1/4鈍刺:1/4軟刺:1/4無刺","9/16尖刺:3/16鈍刺:4/16無刺","9/16尖刺:3/16鈍刺:3/16軟刺:1/16無刺"],a:"D",c:"GEN"},
+{y:108,n:39,q:"三連鎖基因試交結果(野生+/隱性abc),哪些外表型在A和B之間發生重組?(見題目表格)",o:["1,2,5和6","1,3,6和7","2,3,5和7","2,4,5和7","2,4,5和8"],a:"B",c:"GEN"},
+{y:108,n:40,q:"承上題,計算遺傳圖譜上基因A和B之間的距離(map units)?",o:["3 mu","6 mu","15 mu","30 mu","45 mu"],a:"B",c:"GEN"},
+{y:108,n:41,q:"假設孩童時常感到疲倦,經過診察發現其患有代謝性疾病。下列何種構造功能缺失時最容易出現這種疾病?",o:["溶體","高爾基體","平滑內質網","核糖體","粒線體"],a:"E",c:"CELL"},
+{y:108,n:46,q:"番茄MAPK被活化後抑制細胞膜proton ATPase活性,此現象會導致何種變化?",o:["質子送出細胞外速度增加","番茄細胞外pH值上升","細胞膜上不飽和脂肪酸含量上升","細胞膜上受體分子數量降低","茉莉酸合成受到抑制"],a:"B",c:"PLANT"},
+{y:108,n:47,q:"植物根部水勢-0.18 MPa,置於0.1 M蔗糖溶液(水勢-0.23 MPa)中,有關水分子的移動方向最正確?",o:["從植物根部流出到蔗糖溶液中","從蔗糖溶液流往植物根部","雙向移動且移動速度維持一致","無法從所提供的資料判斷","只有在植物根部組織內有ATP水解時才會有水分子的移動"],a:"A",c:"PLANT"},
+{y:108,n:48,q:"如果將植物細胞的類囊體穿孔,使其內部與葉綠體基質相互流通,下列何種過程最直接受影響?",o:["水分子裂解","ATP的合成","NADP⁺還原","光能吸收","電子從光系統II到光系統I的傳遞"],a:"B",c:"METAB"},
+
+/* ============= 109 學年度(精選) ============= */
+{y:109,n:1,q:"四種限制酶切割位:BamHI(CGATCC↓)、ClaI(ATCGAT↓)、BglII(AGATCC↓)、BstBI(TTCGAA↓)。某段DNA單股3'-AAGCTTTCTAGCTAGCTGTAGC-5',哪幾種限制酶可切割出黏狀末端?",o:["BamHI和BglII","BstBI和ClaI","BamHI和ClaI","BglII和ClaI","BglII和BstBI"],a:"B",c:"GEN"},
+{y:109,n:2,q:"細胞內G蛋白質及訊息傳遞:甲Gα可抑制adenyl cyclase 乙G蛋白質中只有Gα調控離子通道 丙離子通道可直接受cGMP/cAMP調控開啟 丁動情素可與GPCR結合",o:["只有甲、乙","只有乙、丙","只有丙、丁","只有甲、丙、丁","只有甲、乙、丙"],a:"E",c:"CELL"},
+{y:109,n:4,q:"關於C3、C4、CAM植物光合作用,下列何者錯誤?",o:["C3植物固定CO2的酵素僅存在於葉綠體中","所有植物之卡爾循環僅在葉綠體中進行","C3植物與C4植物的維管束鞘細胞葉綠體中均可進行卡爾循環","C4植物與CAM植物光合固碳反應的產物有3C分子也有4C分子","C3和C4植物白天進行卡爾循環,CAM植物晚上"],a:"E",c:"METAB"},
+{y:109,n:8,q:"地球生命演化過程,事件先後次序:甲多細胞真核 乙粒線體起源 丙葉綠體起源 丁藍綠藻起源 戊藻菌共生",o:["丁、乙、丙、甲、戊","丁、乙、丙、戊、甲","丁、乙、甲、丙、戊","丁、丙、乙、甲、戊","丁、丙、乙、戊、甲"],a:"A",c:"EVO"},
+{y:109,n:10,q:"潮氣量500mL,呼吸頻率12/min,解剖無效腔150mL,則肺泡通氣量?",o:["72.0 L/min","6.0 L/min","4.2 L/min","1.8 L/min","0.35 L/min"],a:"C",c:"ANIM"},
+{y:109,n:12,q:"發炎時三種免疫細胞到達順序:甲先峰後降→乙中段→丙逐漸升高,(a-嗜中性球, b-單核球, c-淋巴球)",o:["甲a乙b丙c","甲b乙c丙a","甲c乙a丙b","甲b乙a丙c","甲a乙c丙b"],a:"A",c:"IMM"},
+{y:109,n:14,q:"五種動物分類階層關係(甲乙同屬同科;丙獨屬同科;丁戊各屬同科),下列敘述何者錯誤?",o:["甲和丙是同科關係","丙和丁是同科關係","甲和乙是同科關係","丁和戊的關係有五個分類階層是一樣的","乙和丙的關係有六個分類階層是一樣的"],a:"E",c:"DIV"},
+{y:109,n:15,q:"菌根(mycorrhizae)主要以何種方式加強植物的營養?",o:["刺激根毛的發育","轉換大氣中的氮為氨","使根部能寄生於鄰近其它種的植物","透過真菌菌絲吸收水分和礦物質","提供糖分給根部細胞,因為根細胞沒有葉綠體"],a:"D",c:"PLANT"},
+{y:109,n:18,q:"苯丙酮尿症(隱性遺傳),夫妻皆帶因者育有三名子女,各種或然率:甲三正常27/64 乙三患病1/64 丙至少一患病37/64 丁至少一正常27/64 戊全家至少三帶因27/64",o:["甲乙丙","甲乙丁","甲乙戊","乙丙丁","乙丙戊"],a:"A",c:"GEN"},
+{y:109,n:21,q:"激素歸類中,醛固酮、糖皮質素和雄性素被歸為同一類,據以歸類的原因?(甲蛋白質類 乙受體位細胞質/核 丙調控血糖 丁腎上腺皮質 戊固醇類)",o:["甲、乙","乙、丙","乙、丁、戊","丁、戊","乙、戊"],a:"D",c:"ANIM"},
+{y:109,n:22,q:"植物甲(2n=12)和乙(2n=16)雜交產生新種丙為異源多倍體(2n=28),最可能由何種過程形成種化?",o:["適應輻射","異域種化","同域種化","種系發生種化","因性擇而產生的種化"],a:"C",c:"EVO"},
+{y:109,n:25,q:"維生素缺乏配對:甲缺維A夜盲 乙缺B12貧血 丙缺C壞血 丁缺K神經萎縮",o:["只有甲、乙","只有甲、丙","只有甲、乙、丙","只有乙、丙、丁","甲、乙、丙、丁"],a:"C",c:"ANIM"},
+{y:109,n:31,q:"長日照植物臨界夜長9小時,各光照處理是否開花:甲14L/10D(會) 乙16L/8D(不會) 丙4L/8D/4L/8D(會) 丁9L/2D/3L/10D(不會)",o:["甲、乙","乙、丙","丙、丁","甲、丁","乙、戊"],a:"A",c:"PLANT"},
+{y:109,n:32,q:"有關專一性免疫反應及非專一性免疫反應的敘述,何者正確?(甲干擾素非專一 乙肥大細胞組織胺非專一 丙B細胞源自輔助性T 丁B細胞抗體分解抗原 戊輔助T不參與胞殺T活化)",o:["甲、乙","甲、乙、丙","甲、乙、丁","甲、乙、戊","甲、乙、丁、戊"],a:"A",c:"IMM"},
+{y:109,n:33,q:"有絲分裂與減數分裂的比較,何者錯誤?",o:["兩者皆有二分體出現","兩者核酸的複製皆發生於S期","正常狀況下兩者皆有遺傳再組合的現象發生","僅減數分裂會發生聯會、同源染色體互換,有絲分裂則無","有絲分裂產生子細胞數目為減數分裂的一半,但染色體套數為兩倍"],a:"C",c:"GEN"},
+{y:109,n:35,q:"人造細胞(0.03M蔗糖+0.02M葡萄糖)置於燒杯(0.01M蔗糖+0.02M葡萄糖+0.01M果糖)中,選擇性通透膜對水及單醣通透但對雙醣不通透。下列敘述何者錯誤?",o:["果糖將會淨擴散進入人造細胞","葡萄糖將會淨擴散離開人造細胞","對人造細胞而言,此環境是低張溶液","人造細胞放入燒杯後會更形膨脹","當平衡時,人造細胞內、外蔗糖濃度為0.005 M"],a:"E",c:"CELL"},
+{y:109,n:36,q:"互換(crossing over)通常發生於下列哪些染色體節段之間?",o:["非同源染色體之姊妹染色分體之間","同一條染色體的姊妹染色分體之間","體染色體與性染色體之間","基因體的非同源基因座之間","同源染色體之非姊妹染色分體之間"],a:"E",c:"GEN"},
+{y:109,n:37,q:"下列生化分析方法,哪些可用於評估蛋白質的表現量?甲南方墨漬 乙西方墨漬 丙北方墨漬 丁原位雜交 戊即時PCR",o:["甲、乙、丁","乙、丙、丁","乙、丙、戊","乙、丙、丁、戊","甲、丙、丁、戊"],a:"D",c:"GEN"},
+{y:109,n:43,q:"關鍵掠食者(keystone predator)常能維持群聚的物種多樣性,主要原因為何?",o:["完全排除群聚內其它掠食者","允許群聚內其它掠食者的捕食","捕食群聚內的優勢物種","捕食群聚內其它掠食者","捕食群聚內數量較少的物種"],a:"C",c:"ECO"},
+{y:109,n:48,q:"X疾病(體染色體隱性)在甲國盛行率1/40000,以哈溫公式估算甲國X疾病帶因者(異型合子)占總人口百分比?",o:["0.995%","0.5%","0.095%","0.05%","0.0095~0.05%"],a:"A",c:"EVO"},
+{y:109,n:50,q:"DNA鳥糞嘌呤上的胺基自發性丟失而形成次黃嘌呤(hypoxanthine)。細胞可利用下列哪一組分子修補此一損傷?",o:["端粒酶、解旋酶、單股結合蛋白","核酸酶、DNA聚合酶、DNA黏合酶","端粒酶、導引酶、DNA聚合酶","DNA黏合酶、導引酶、解旋酶","核酸酶、端粒酶、導引酶"],a:"B",c:"GEN"},
+
+/* ============= 110 學年度(精選) ============= */
+{y:110,n:1,q:"生物性別決定系統,下列敘述何者錯誤?",o:["鳥類使用Z-W系統,有Z及W為雄性,兩個Z為雌性","蟋蟀為X-0系統,雌性兩個X,雄性只有一個X","乳牛為X-Y系統,有Y染色體的是雄性","蜜蜂單倍體個體是雄性,雙倍體是雌性"],a:"A",c:"GEN"},
+{y:110,n:2,q:"染色體結構變異中,費城染色體和慢性骨髓性白血病有密切關係,費城染色體主要是染色體結構發生何種變化?",o:["轉位","重覆","倒轉","缺失"],a:"A",c:"GEN"},
+{y:110,n:5,q:"下列哪一種動物病毒和COVID-19病毒同屬單股RNA病毒?",o:["脊髓灰白質炎病毒(poliovirus)","人類疱疹病毒(EB)第四型","乳突病毒(papillomavirus)","牛痘病毒(cowpox)"],a:"A",c:"DIV"},
+{y:110,n:7,q:"進行細胞核形分析時,加0.1%秋水仙素的目的不包括下列何者?",o:["中止紡錘體形成","濃縮染色體長度","增加中期細胞數目","增加細胞內染色體數目"],a:"D",c:"CELL"},
+{y:110,n:9,q:"恐狼和現存灰狼骨骼極為相似,但檢測DNA發現最近共同祖先存在於570萬年前,因此恐狼和灰狼的極度相似可能是屬於何種演化?",o:["趨異演化","趨同演化","共同演化","定向演化"],a:"B",c:"EVO"},
+{y:110,n:10,q:"有關人類紅血球和植物篩管細胞,下列敘述何者正確?",o:["二者都可攜帶大量二氧化碳","二者皆含有中央液泡可儲存物質","二者成熟時皆缺少細胞核","二者皆有溶體可清除受損胞器"],a:"C",c:"CELL"},
+{y:110,n:11,q:"小靜生日6月想送報春花(短日照),最可行的方法是?",o:["在溫室中培養,加長光照時間","在溫室中培養,縮短光照時間,並在夜間中段以紅光照射","在溫室中培養,縮短光照時間,並在夜間中段先以遠紅光再以紅光照射","在溫室中培養,縮短光照時間,並在夜間中段先以遠紅光、紅光、最後再以遠紅光照射"],a:"D",c:"PLANT"},
+{y:110,n:14,q:"感染中華肝吸蟲時血液檢查時下列哪一種血球細胞會增加?",o:["嗜鹼性球","嗜伊紅球","單核球","嗜中性球"],a:"B",c:"IMM"},
+{y:110,n:18,q:"艾利森和本庶佑因發現「免疫檢查點」獲2018諾貝爾生醫獎,他們最早發現的免疫檢查點分別為何?",o:["CTLA-4, PD-1","NLRP12, SA-4-1BBL","PD-L1, MDM2","Oncotype DX 3, SA-4-1BBL"],a:"A",c:"IMM"},
+{y:110,n:21,q:"人類生長荷爾蒙促使脂肪細胞進行脂質裂解作用時,所媒介的訊息傳遞路徑及分子為何?",o:["Wnt receptor路徑,透過GSK3、catenin","Cytokine receptors路徑,透過JAK、STAT","Receptor tyrosine kinase路徑,透過Ras、MAPK","G protein couple receptor路徑,透過trimeric G protein、Adenylyl cyclase"],a:"B",c:"CELL"},
+{y:110,n:22,q:"下列5個物質,哪些可以與微管或微管蛋白結合?甲鬼筆環肽 乙細胞鬆弛素 丙紫杉醇 丁秋水仙素 戊諾考達唑",o:["甲乙丙","乙丙丁","丙丁戊","甲丁戊"],a:"C",c:"CELL"},
+{y:110,n:24,q:"河豚和Vibrio屬細菌之間的關係屬於下列哪一種?",o:["片利共生","互利共生","寄生","競爭"],a:"B",c:"ECO"},
+{y:110,n:27,q:"許多毒素能調控人類的神經肌肉連結,有關毒素的作用機制,下列敘述何者正確?",o:["河豚毒素阻斷神經與骨骼肌連結中的慢速鈉離子通道","肉毒桿菌毒素藉由促進AChE的活性而使肌肉放鬆","箭毒在神經末梢與乙醯膽鹼競爭,阻斷對於骨骼肌的神經衝動","沙林毒氣藉由促進神經末梢乙醯膽鹼之釋放而使肌肉僵直麻痺"],a:"C",c:"ANIM"},
+{y:110,n:29,q:"有關人體中酮體(ketone bodies)的合成、運送等,下列敘述何者錯誤?",o:["只發生在肝臟細胞粒線體的基質中","最終合成的acetone、acetoacetate、β-hydroxylbutyrate稱之為酮體","酮體在血液中不需要血清蛋白或脂肪結合蛋白的結合即可運送","合成第一步驟由三個Acetyl CoA為原料經thiolase酵素產生帶六碳的HMG-CoA"],a:"D",c:"METAB"},
+{y:110,n:30,q:"一個正常無抑制劑作用下的生化反應,當受質的濃度為4倍Km值時,該反應的v/Vmax比值會是多少?",o:["0.20","0.25","0.75","0.80"],a:"D",c:"METAB"},
+{y:110,n:32,q:"抑制劑對於酵素的作用,下列敘述何者正確?",o:["競爭性抑制劑使Vmax變小、Km變大","無競爭抑制劑使Vmax不變、Km變小","不可逆性抑制劑使Vmax變小、Km變小","非競爭性抑制劑使Vmax變小、Km不變"],a:"D",c:"METAB"},
+{y:110,n:35,q:"有關原核細胞DNA複製過程中的DNA聚合酶及相關分子,下列敘述何者正確?",o:["DNA聚合酶I具有3'→5' exonuclease活性是其具有高度複製忠實性的機轉之一","DNA聚合酶III是主要移除RNA引子及將該片段互補式合成DNA的酵素","DNA聚合酶II是主要負責使DNA合成增長、合成新股的酵素","DNA聚合酶I利用其3'→5' exonuclease的活性將RNA引子移除"],a:"A",c:"GEN"},
+{y:110,n:38,q:"突變劑亞硝酸可使C→U配A,A→I配C。DNA序列5'-GCTA-3'經亞硝酸作用、DNA複製後可能的突變序列?(甲GTTA/CAAT 乙GCTC/CGAG 丙GATA/CTAT 丁GCTG/CGAC 戊ACTA/TGAT)",o:["甲乙","乙丙","丙丁","丁戊"],a:"D",c:"GEN"},
+{y:110,n:40,q:"DNA序列5'-CTGAGTA*****GTAGCGAC-3'是基因外顯子1與內含子(*)及外顯子2交界,經剪接後序列?",o:["5'…CTAGCGAC…3'","5'…CTGGCGAC…3'","5'…CTGACGAC…3'","5'…CTGAGGAC…3'"],a:"C",c:"GEN"},
+{y:110,n:44,q:"下列選項何者可使血紅素-氧解離曲線向左偏移?甲降低體溫 乙增加二氧化碳分壓 丙降低2,3-DPG濃度",o:["僅甲乙","僅乙丙","僅甲丙","甲乙丙"],a:"C",c:"ANIM"},
+{y:110,n:48,q:"血糖5mg/mL、RPF=700mL/min、filtration fraction=1/7、葡萄糖再吸收最大運載375 mg/min,則腎對葡萄糖清除率?",o:["0 mL/min","25 mL/min","100 mL/min","125 mL/min"],a:"B",c:"ANIM"},
+{y:110,n:49,q:"有關哺乳類視覺生理,下列敘述何者正確?",o:["大腦視覺皮層的簡單細胞對光刺激方向性有反應","桿狀細胞受光刺激後使cGMP濃度增加","桿狀細胞受光後利用rhodopsin及RTK訊息路徑傳送","感應左眼所有光覺神經彙整後在視交叉處傳遞到右腦"],a:"A",c:"ANIM"},
+{y:110,n:50,q:"有關COVID-19病毒,下列敘述何者錯誤?",o:["人體心臟、腸胃道細胞具ACE2受體可與棘蛋白結合","為正單鏈RNA病毒,繁殖主要以反轉錄酶形成DNA","人體感染後產生抗體時效順序先IgM後IgG","遺傳物質含5'cap及3'poly(A)tail"],a:"B",c:"DIV"},
+
+/* ============= 111 學年度(精選) ============= */
+{y:111,n:1,q:"幽門螺旋桿菌會造成胃潰瘍及胃癌,下列何種診斷工具是目前臨床常用來判定有幽門螺旋桿菌感染的依據?",o:["碳13尿素呼吸檢查","經上消化道內視鏡胃黏膜切片之快速尿素酶檢查","血清學檢查抗幽門螺旋桿菌抗體","經上消化道內視鏡胃黏膜切片之病理檢查"],a:"A",c:"DIV"},
+{y:111,n:4,q:"組織相容性複合體(MHC)於健康人體免疫系統中具重要角色,下列何種細胞可表達高量第二型MHC分子?",o:["神經細胞","肝細胞","B細胞","紅血球"],a:"C",c:"IMM"},
+{y:111,n:5,q:"淋巴細胞包括B和T細胞,下列何者是B細胞所特有而T細胞中沒有發生?",o:["在細胞表面表現特定的抗原受體","在細胞分化過程會進行類型轉換(isotype switching)","在細胞發育過程會進行基因重組","辨識與自身MHC結合的抗原分子"],a:"B",c:"IMM"},
+{y:111,n:6,q:"病毒生活史的基本步驟依序為?I釋放 II穿透 III複製 IV組裝 V吸附 VI去蛋白衣",o:["V→VI→II→IV→I→III","VI→II→III→IV→I→V","II→VI→V→III→IV→I","V→II→VI→III→IV→I"],a:"D",c:"DIV"},
+{y:111,n:7,q:"糖尿病患者的血糖調控非常重要,下列何者錯誤?",o:["胰島素可以促進組織細胞吸收血液中的葡萄糖","肌肉和肝臟細胞將吸收的葡萄糖轉化為肝醣","當血糖低時,胰島的β細胞可分泌昇糖素促進肝醣分解為葡萄糖","胰島素分泌不足時,會導致血糖升高"],a:"C",c:"ANIM"},
+{y:111,n:9,q:"麗莎接種了三次B型肝炎疫苗,半年後檢驗結果可能為?",o:["HBcAg(-);anti-HBc(-);anti-HBs(+)","HBcAg(+);anti-HBc(-);anti-HBs(+)","HBsAg(+);anti-HBc(+);anti-HBs(-)","HBsAg(-);anti-HBc(+);anti-HBs(-)"],a:"A",c:"IMM"},
+{y:111,n:11,q:"健康人體大腦皮層分為四大葉,主管感覺、聽覺及觸覺等刺激,請問下列哪一部分主要負責聽覺?",o:["額葉","頂葉","顳葉","枕葉"],a:"C",c:"ANIM"},
+{y:111,n:12,q:"先天性免疫補體系統中,何種組合全是C5轉換酶?I:C4b2a3b II:C3bBb III:C3b2Bb IV:C4b2a",o:["I、II","II、III","II、IV","I、III"],a:"D",c:"IMM"},
+{y:111,n:13,q:"有關細胞膜運輸的敘述,何者最正確?",o:["海帶可以藉擴散作用自海洋中將碘吸收入體內","植物根細胞從土壤中吸收無機鹽為主動運輸","動物小腸吸收葡萄糖是利用滲透壓差異","水通過細胞膜是被動運輸"],a:"B",c:"CELL"},
+{y:111,n:18,q:"B細胞在周邊淋巴結進行類型轉換及體超突變時,主要需要下列哪種細胞的協助?",o:["樹突細胞","TH1細胞","TFH細胞(濾泡輔助T)","巨噬細胞"],a:"C",c:"IMM"},
+{y:111,n:22,q:"細菌β-lactamase可分解下列哪些抗生素?I頭孢素 II青黴素 III鏈黴素 IV多黏桿菌素",o:["I、II","II、III","III、IV","I、IV"],a:"A",c:"DIV"},
+{y:111,n:24,q:"反轉錄酶的發現顛覆了原本自然界的法則,下列哪兩個病毒複製皆需要反轉錄酶?I慢病毒 II腸病毒 III B型肝炎病毒 IV痘病毒",o:["I、II","I、III","III、IV","I、IV"],a:"B",c:"DIV"},
+{y:111,n:25,q:"下列何種疾病不是由傳染性蛋白(prion)引起?",o:["狂牛病","庫賈氏病","克魯症","亞急性硬化性全腦炎"],a:"D",c:"DIV"},
+{y:111,n:29,q:"狹義遺傳率(narrow-sense heritability)的定義最接近?",o:["外表型變異","遺傳變異","廣義遺傳率","累加性遺傳變異所導致的外表型變異比例"],a:"D",c:"GEN"},
+{y:111,n:31,q:"有關藻類與植物生活史的敘述,下列何者最正確?",o:["合子生活史的物種以孢子體世代為主","配子生活史的物種只在合子時短暫的具有二倍體階段","配子生活史的物種產生配子前行減數分裂","合子生活史的物種具明顯的世代交替"],a:"C",c:"PLANT"},
+{y:111,n:32,q:"達爾文雀因乾旱來臨食物不足,致使鳥喙大小在連續幾代間產生變化,此種變化情形最符合?",o:["隔離","種化","溯祖理論","微演化"],a:"D",c:"EVO"},
+{y:111,n:34,q:"被子植物根部具有一層排列緊密的細胞所形成的內皮(凱氏帶),會在哪一區域中發現?",o:["I區(根毛區)","II區(伸長區)","III區(分生區)","IV區(根冠)"],a:"A",c:"PLANT"},
+{y:111,n:36,q:"在族群發展過程,下列何者最不可能導致種化發生?",o:["先驅者效應","穩定天擇","分歧性天擇","多倍化"],a:"B",c:"EVO"},
+{y:111,n:37,q:"溶酶體被認為是內膜系統一部分的原因,下列何者最正確?",o:["在內質網中沉積消化的終產物","由內質網合成並經高爾基氏體加工的產物所形成","促進高爾基氏體之間的移動","可以儲存作為蛋白質合成抑製劑的鈣離子"],a:"B",c:"CELL"},
+{y:111,n:42,q:"真核生物轉錄(transcription)從啟動到結束步驟順序?I打開雙股 II推進RNA聚合酶分離鹼基對形成RNA:DNA III RNA聚合酶與一般轉錄因子結合啟動子形成封閉複合物 IV mRNA加蓋 V兩股DNA鏈在轉錄泡尾端重聚",o:["III→I→II→V→IV","I→II→III→IV→V","II→IV→V→I→III","III→IV→I→V→II"],a:"A",c:"GEN"},
+{y:111,n:45,q:"細菌的轉型(transformation)是指?",o:["從DNA分子來產生RNA鏈","噬菌體DNA分子感染細胞而進入細菌中","細菌的DNA半保留複製現象","細菌將外部DNA片段同化到細胞基因組"],a:"D",c:"GEN"},
+{y:111,n:47,q:"囊狀纖維化(隱性同型合子)新生兒中有81/1,000,000患病,依Hardy-Weinberg模型推估,顯性(A1)和隱性(A2)對偶基因的預期頻度?",o:["A1=0.99910, A2=0.00090","A1=0.99900, A2=0.00100","A1=0.99100, A2=0.00900","A1=0.99000, A2=0.01000"],a:"C",c:"EVO"},
+{y:111,n:48,q:"承上題,患者多在青少年期死亡(未繁殖),下一世代基因庫的A1和A2對偶基因頻度?",o:["A1=0.99991, A2=0.00009","A1=0.99910, A2=0.00090","A1=0.99808, A2=0.00192","A1=0.99108, A2=0.00892"],a:"D",c:"EVO"},
+{y:111,n:49,q:"假設物質都可持續存在化石中,從古代到最近地層沉積物,推測由古到今最有可能的發現順序?I幾丁質與蛋白質偶聯 II葉綠素 III骨頭 IV纖維素",o:["I→II→III→IV","II→IV→I→III","III→II→IV→I","IV→II→I→III"],a:"B",c:"EVO"},
+{y:111,n:50,q:"石炭紀(3.59-2.99億年前),依現有化石資料,最適合做為建造建築物或器具的材料?",o:["輪藻、苔蘚類和裸子植物","蕨類、木賊類和石松類","木賊類和苔蘚類","石松類和松葉蕨類"],a:"B",c:"DIV"},
+
+/* ============= 112 學年度(精選) ============= */
+{y:112,n:1,q:"溫室氣體中,過去一世紀濃度大幅上升,科學評估其總貢獻僅約二氧化碳的30%,但分子層次貢獻度比CO2高的是?",o:["SO2","CH4","N2O","CO"],a:"B",c:"ECO"},
+{y:112,n:2,q:"病毒表面蛋白用以接合宿主細胞受體,下列何者皆為最正確的組合?I HIV-gp120 II Influenza A-VP7 III Adenovirus-Fiber IV Measles-gp350/gp220",o:["I和II","II和III","III和IV","I和III"],a:"D",c:"DIV"},
+{y:112,n:3,q:"北方森林NEE每月90單位,自營呼吸40,異營呼吸20,該生態系GPP?",o:["每月60","每月130","每月150","每月210"],a:"C",c:"ECO"},
+{y:112,n:6,q:"小型植物經光合作用產生12兆個葡萄糖分子,分解的水分子與產生的氧分子分別?",o:["6兆水/12兆氧","24兆水/24兆氧","36兆水/72兆氧","72兆水/72兆氧"],a:"D",c:"METAB"},
+{y:112,n:7,q:"聖嬰-南方振盪現象一般與下列何種現象有關?",o:["東太平洋地區的上升流大幅增強","東太平洋地區的上升流大幅減少或消失","西太平洋的低海面氣壓","印尼和澳大利亞部分地區洪水的發生"],a:"B",c:"ECO"},
+{y:112,n:8,q:"細胞中特定生物代謝反應具有負的ΔG值,缺乏酵素時需多年才得以進行。下列何者最正確?",o:["此反應不會自發進行","此反應需要一定量的活化能才能進行","此反應不遵循熱力學第二定律","此反應物的初始自由能遠小於產物的最終自由能"],a:"B",c:"METAB"},
+{y:112,n:9,q:"研究人員發現一種化合物可減小肺腫瘤,但腫瘤需小且不能轉移,此化合物作用是禁止腫瘤細胞間的訊息傳遞,這種化合物抑制機制最可能?",o:["腫瘤細胞之間的突觸信號","腫瘤細胞之間的內分泌信號","腫瘤細胞之間的旁分泌信號","腫瘤細胞之間的神經內分泌信號"],a:"C",c:"CELL"},
+{y:112,n:10,q:"哺乳動物中發現其正常體細胞中有32個姊妹染色質絲(sister chromatids),則此細胞的單倍體染色體數及染色體數?",o:["8和8","8和16","16和16","16和32"],a:"D",c:"CELL"},
+{y:112,n:12,q:"血友病(X染色體上)父親的女兒(外表型正常)嫁給外表型正常男性,第一個女兒和第一個兒子患病的機率?",o:["0%和0%","0%和25%","0%和50%","0%和100%"],a:"C",c:"GEN"},
+{y:112,n:14,q:"兩側對稱動物Hox基因的研究,有關此類基因的敘述何者最正確?",o:["會在其附肢的發育中表現","此類基因分散在整個基因組中","依據規範的空間模式表現","對其消化系統的發育至關重要"],a:"C",c:"GEN"},
+{y:112,n:15,q:"CD4 T細胞影響免疫趨向,有關轉錄因子和主要誘導CD4 T細胞配對組合,下列何者最正確?I FoxP3-Treg II T-bet-TH2 III GATA-3-TH1 IV RoRγT-TH17",o:["I和II","II和IV","I和III","I和IV"],a:"D",c:"IMM"},
+{y:112,n:16,q:"真核生物mRNA成熟過程中的轉錄後修飾,下列哪三種皆正確?",o:["5'-端capping、3'-端poly(A)添加、剪接","3'-端capping、5'-端poly(A)添加、剪接","剪接外顯子、插入內含子、capping","5'-端capping、3'-端capping、剪接"],a:"A",c:"GEN"},
+{y:112,n:18,q:"雞冠形狀(玫瑰R+豌豆P=胡桃,rrpp=單型),親本玫瑰×胡桃→17胡桃:16玫瑰:7豌豆:6單型,可能的親本基因型?",o:["Rrpp × RrPp","Rrpp × Rrpp","rrPp × rrPP","rrPp × rrPp"],a:"A",c:"GEN"},
+{y:112,n:21,q:"有關DNA結構的敘述,下列何者最正確?",o:["每一股以3.4埃旋轉一圈","以離子鍵將雙股連結在一起","雙股結構是呈現反向平行的","成對的鹼基相互垂直並平行於螺旋的長軸"],a:"C",c:"GEN"},
+{y:112,n:23,q:"植物賀爾蒙Auxin對植物胚胎的影響和果蠅中的Bicoid蛋白之作用相似,如果將Auxin添加到胚根細胞的培養液,最有可能的結果?",o:["根細胞將停止發育","根細胞會伸長並成熟","根細胞會轉化為分生組織細胞","根細胞不會對Auxin做出反應"],a:"B",c:"PLANT"},
+{y:112,n:25,q:"無種子維管束植物被認為是平行系群(paraphyletic)而不是單系群的原因,下列何者最正確?",o:["無種子維管束植物內的類群,彼此間的關係比和種子植物群更為密切","無種子維管束植物與種子植物相比,與無維管植物有更近緣的共同祖先","所有類群的無種子維管植物並不具有相同的祖先","此類群包含他們的共同祖先,同時也包含此共同祖先的具有種子的後裔"],a:"D",c:"DIV"},
+{y:112,n:26,q:"克流感(Tamiflu, oseltamivir)是抗病毒藥物,主要是抑制下列何種分子?",o:["血球凝集素","神經胺酸酶","唾液酸","乙醯膽鹼受體"],a:"B",c:"DIV"},
+{y:112,n:27,q:"狂犬病病毒最主要感染細胞所接合的受體?",o:["Sialic acid","Erythrocyte P antigen","Acetylcholine receptor","CD4"],a:"C",c:"DIV"},
+{y:112,n:31,q:"果蠅族群初期1000隻,幾何成長率每代3.0,每兩週一世代,六週後預期族群大小?",o:["3,000","18,000","27,000","81,000"],a:"C",c:"ECO"},
+{y:112,n:34,q:"亞洲長尾猴RNASE1與RNASE1B,以及亞洲長尾猴RNASE1與人類RNASE1,依序屬於下列何種基因類型?",o:["Paralogous和Orthologous","Derived和Homologous","Paralogous和Homologous","Derived和Orthologous"],a:"A",c:"EVO"},
+{y:112,n:37,q:"類鐸受體(TLR)中,下列何種主要在細胞的內涵體(endosome)中?",o:["TLR2","TLR4","TLR5","TLR9"],a:"D",c:"IMM"},
+{y:112,n:43,q:"動物行為學研究的發現,下列哪些動物的組合皆沒有印痕行為?I山椒魚 II帝雉 III櫻花鉤吻鮭 IV山羊",o:["I和II","II和IV","I和III","III和IV"],a:"C",c:"ECO"},
+{y:112,n:46,q:"補體系統攻膜複合物,下列何種補體蛋白不是組成攻膜複合物的蛋白?",o:["C3","C9","C6","C8"],a:"A",c:"IMM"},
+{y:112,n:48,q:"何種分子提供細胞與細胞間的屏障,讓葡萄糖不能輕易通過細胞間的間隙?",o:["半胞橋小體","鈣粘蛋白","上皮鈣離子依賴性之黏合蛋白(E-cadherin)","緊密連接蛋白(tight junction)"],a:"D",c:"CELL"},
+{y:112,n:50,q:"先驅者族群發展出與原始族群不同的對偶基因頻率,但數百年後形成遺傳同質化,推測最有可能由下列何種現象所導致?",o:["先驅者族群內的遺傳漂變造成","先驅者族群內的隨機交配造成","先驅者和原始族群內皆沒有突變造成","先驅者族群和原始族群間的遷移造成"],a:"D",c:"EVO"},
+
+/* ============= 113 學年度(精選) ============= */
+{y:113,n:1,q:"下列何者無法幫助決定物種在演化上的相關性?",o:["rRNA序列","同源構造(homologous structure)","生物地理學與物種分佈","同功構造(analogous structure)"],a:"D",c:"EVO"},
+{y:113,n:2,q:"比較植物葉綠體的光反應和粒線體的氧化磷酸化作用,下列敘述何者錯誤?",o:["兩者均透過電子傳遞鏈,將能量用以建立膜兩側之質子濃度梯度差","光反應中最主要的電子供應是NADPH,在粒線體是NADH和FADH2","兩者均藉由質子回流通過ATP合成酶產生ATP","電子傳遞鏈分別位在葉綠體的類囊體膜和粒線體內膜"],a:"B",c:"METAB"},
+{y:113,n:3,q:"有關種化(speciation)之敘述下列何者錯誤?",o:["生殖隔離是新物種形成的必要條件","種化後的生殖隔離機制是為了保存物種的生殖能力","無地理隔離也可能產生新物種","生態交會區相較於穩定的沙漠區,較可能形成新物種"],a:"B",c:"EVO"},
+{y:113,n:5,q:"基因沉默機制可了解基因功能,下列何者敘述錯誤?",o:["siRNA是短的單股RNA,藉基因沉默機制調控基因表現","miRNA是短的非編碼RNA,藉基因沉默機制調控基因表現","XIST是長的非編碼RNA,藉結合在X染色體調控基因表現","CRISPR-Cas9是廣泛用來探討基因功能的基因編輯工具,Cas9需有引導RNA到辨識區才能進行基因編輯"],a:"A",c:"GEN"},
+{y:113,n:8,q:"打羽球時手臂肌肉收縮的生理事件依順序排列?1)肌漿網釋放Ca²⁺ 2)Ca²⁺與肌鈣蛋白結合 3)運動神經元末稍釋放乙醯膽鹼 4)動作電位沿T-tubules傳送 5)橫橋與細絲結合滑動 6)擊球 7)肌肉細胞膜產生動作電位",o:["3,7,4,1,2,5,6","4,3,2,7,1,5,6","4,1,3,5,2,6,7","3,1,4,7,5,2,6"],a:"A",c:"ANIM"},
+{y:113,n:11,q:"球賽中緊張氣氛引起戰或逃反應,何者不是此時的生理反應?",o:["腸胃道活動增加","瞳孔放大","心跳加速","肝臟釋放葡萄糖"],a:"A",c:"ANIM"},
+{y:113,n:15,q:"為何肝病病人容易有水腫?",o:["肝製造之血清白蛋白(albumin)不足","肝無法再有效代謝藥物","流向肝臟的血太少","肝製造之血管收縮素原太多"],a:"A",c:"ANIM"},
+{y:113,n:17,q:"下列哪一項目的改變會使腎絲球過濾率(GFR)增加?",o:["入球小動脈擴張","入球小動脈收縮","腎絲球靜力壓增加","鮑氏囊的靜力壓增加"],a:"C",c:"ANIM"},
+{y:113,n:18,q:"腎臟的對流倍增系統(countercurrent multiplier system)主要功用為何?",o:["減少葡萄糖的流失","調節尿液的溫度","調節尿液的酸鹼度","濃縮尿液"],a:"D",c:"ANIM"},
+{y:113,n:20,q:"關於重症肌無力(myasthenia gravis),何者正確?",o:["一種肌肉細胞自發性萎縮的疾病","一種遺傳性的乙醯膽鹼酯酶缺陷的疾病","由病毒感染神經末稍而引起","一種自體免疫疾病,與運動終板的乙醯膽鹼接受器數目減少有關"],a:"D",c:"IMM"},
+{y:113,n:21,q:"下列何者是製造和分泌表面張力素(surfactant)的細胞?",o:["紅血球","第一型肺泡上皮細胞","第二型肺泡上皮細胞","微血管內皮細胞"],a:"C",c:"ANIM"},
+{y:113,n:22,q:"Leber遺傳性視神經萎縮(LHON)是粒線體氧化磷酸化缺失的疾病,下列敘述何者正確?",o:["粒線體DNA與細胞核DNA一樣為環狀雙股結構","此疾病大多是自體隱性染色體遺傳","此疾病大多是X-性聯染色體遺傳,遺傳自父親","此疾病大多是粒線體DNA突變,遺傳自母親"],a:"D",c:"GEN"},
+{y:113,n:25,q:"6位工作人員喝了由熱水龍頭製備的咖啡(亞硝酸鹽300ppm)後出現發紺症狀,他們血紅素類型(Hb)的檢測結果哪一個會高於正常值?",o:["HbF","MetHb","HbCO","HbS"],a:"B",c:"ANIM"},
+{y:113,n:27,q:"血友病X染色體隱性,新生男孩血友病1/10000。下列敘述何者錯誤?",o:["隱性血友病基因頻率為10⁻⁴","顯性正常基因的頻率為10⁻¹","新生兒中女孩得血友病的頻率為10⁻⁸","帶血友病基因的女孩出現頻率約為2×10⁻⁵"],a:"B",c:"EVO"},
+{y:113,n:28,q:"大腸桿菌乳醣操縱組(lac operon)基因表現,受到下列何者正向的調控?",o:["操縱子DNA的甲基化","調節基因lacI的產物增加","cAMP-CRP複合體幫助RNA聚合酶與啟動子結合","多基因性RNA的差異剪接"],a:"C",c:"GEN"},
+{y:113,n:30,q:"若真核細胞缺乏端粒酶(telomerase),下列何種情況最可能發生?",o:["細胞癌化機率變高","只能生成岡崎片段","無法修復胸腺嘧啶二聚體","染色體DNA變短"],a:"D",c:"GEN"},
+{y:113,n:33,q:"基因型是XXXY的人,那麼這些人會是?",o:["男生,有3個巴爾氏體","女生,有3個巴爾氏體","男生,有2個巴爾氏體","男生,有1個巴爾氏體"],a:"C",c:"GEN"},
+{y:113,n:34,q:"有關肝糖(glycogen)的敘述何者正確?",o:["肝糖和澱粉(amylopectin)有相同的構造,直線狀無分枝","肝糖之降解由還原端開始","肌肉能儲存或分解肝糖,於禁食時能夠提供血液中的葡萄糖","當吃了高糖飲食後,肌肉中肝糖的形成能夠降低血糖"],a:"D",c:"METAB"},
+{y:113,n:36,q:"有關λ噬菌體(lambda phage)的溶原週期之描述何者正確?",o:["噬菌體的基因體會隨著宿主細胞基因體一同複製","大部分的原噬菌體基因會被一個特定的原噬菌體蛋白質活化","感染細菌後,噬菌體立刻將宿主細胞變成λ噬菌體的製造工廠","噬菌體DNA會經由交叉互換而任意插入宿主DNA"],a:"A",c:"DIV"},
+{y:113,n:39,q:"基因表達常與細胞功能變化有關,哪一個技術被用來測量mRNA表達量?",o:["北方墨點法","聚合酶連鎖反應","指紋鑑定","質譜分析"],a:"A",c:"GEN"},
+{y:113,n:40,q:"下列物質的合成是源自膽固醇的共有幾個?1)甲狀腺素 2)膽酸 3)ACTH 4)升糖素 5)雌激素 6)褪黑激素",o:["5","4","3","2"],a:"D",c:"ANIM"},
+{y:113,n:41,q:"細胞凋亡是維持組織穩定性的重要過程,哪一個蛋白質家族主要負責調控細胞凋亡?",o:["TNF受體家族","Bcl-2家族","MAPK家族","TGF-β家族"],a:"B",c:"CELL"},
+{y:113,n:43,q:"兩位患者(寄生蟲感染、刺蒿花粉過敏),他們的免疫反應在哪個層面有共同點?",o:["兩位患者的細胞毒性T細胞數量增加","兩位患者都會出現過敏性休克","兩位患者都有發展自體免疫疾病的風險","兩位患者血液的IgE濃度升高"],a:"D",c:"IMM"},
+{y:113,n:48,q:"硬脂酸[stearic acid, CH3(CH2)16COOH]的完全氧化,須經過數次β-oxidation,產生?",o:["9 Acetyl-CoA + 9 FADH2 + 9 NADH + 9 H⁺","8 Acetyl-CoA + 9 FADH2 + 9 NADH + 9 H⁺","9 Acetyl-CoA + 8 FADH2 + 8 NADH + 8 H⁺","18 Acetyl-CoA + 16 FADH2 + 16 NADH + 16 H⁺"],a:"C",c:"METAB"},
+{y:113,n:49,q:"有關細胞週期,下列何者敘述錯誤?",o:["促成熟因子(MPF)包含週期蛋白和CDK","老化細胞中常發現CDK抑制蛋白表現量增加","Paul Nurse發現CDC2是CDK","腫瘤細胞中常發現cyclin D1表現量減少"],a:"D",c:"CELL"},
+{y:113,n:50,q:"有關人類基因體,下列何者敘述錯誤?",o:["單一非重複序列大多數是編碼蛋白質,佔高於70%基因體組","跳躍因子是產生多基因家族的原因之一","高度重複序列(STR)常用於親子鑑定","中度重複序列如SINE和LINE一般都是不編碼的序列"],a:"A",c:"GEN"},
+
+/* ============= 114 學年度(精選) ============= */
+{y:114,n:1,q:"全球氣候變遷下,陸地生態系淨初級生產量(NPP)可能因多種環境因子改變,下列何組因子最可能直接影響NPP?",o:["大氣CO₂濃度增加、水分供應未明顯改變","年均氣溫上升3°C、伴隨降水量顯著減少","生物多樣性顯著提升、環境氣候條件穩定","土壤微生物數量下降、氣候條件未發生變化"],a:"B",c:"ECO"},
+{y:114,n:2,q:"資源受限環境中,某甲蟲雄性展現兩種極端繁殖策略:大角型攻擊驅趕對手,小型無角偷襲交配。中等體型雄性兩種策略皆無優勢。此現象最可能反映何種演化天擇趨勢?",o:["方向性天擇","穩定性天擇","分歧性天擇","平衡性天擇"],a:"C",c:"EVO"},
+{y:114,n:3,q:"資源穩定且競爭激烈的熱帶雨林,何種物種最符合K-選擇理論的特性?",o:["每胎產下1-2隻,哺育超過一年,10年性成熟的哺乳類,壽命長達數十年","每年產下數百顆卵,幼體存活率極低的兩棲類,壽命約數年","能迅速繁殖並大量擴張族群的入侵性昆蟲,適應性極高","以營養繁殖方式快速拓殖的蕨類植物,族群增長迅速但壽命短"],a:"A",c:"ECO"},
+{y:114,n:6,q:"部分鯨魚具有無功能的後肢骨,為其陸生祖先遺留下的結構。這種現象最適合歸類為下列何種演化證據?",o:["Comparative embryology證據","Homologous structures證據","Vestigial structures證據","Molecular homology證據"],a:"C",c:"EVO"},
+{y:114,n:9,q:"熱帶地區破碎化森林邊際區因光照增加、微氣候變化與入侵物種侵入,下列何種策略長期維持生物多樣性最有效?",o:["建立生態廊道連結破碎化森林區塊,強化物種遷移與基因交流","在邊際區域設置人工遮蔭或綠籬結構","定期引入原生物種至邊際區域,以恢復當地生態功能","增加森林核心區面積比例,以減少邊際區域佔比"],a:"A",c:"ECO"},
+{y:114,n:10,q:"苔蘚與蕨類植物兩大類群能經由孢子散播,但仍高度依賴潮濕環境。最可能解釋此演化限制的根本因素?",o:["配子體無法在乾燥環境中進行光合作用","胞外酵素活性在乾燥條件下降低,影響孢子釋放效率","胚胎形成需要潮濕環境才能與母體維持營養連結","配子體中雄配子的運動與卵細胞受精必須依賴水介質"],a:"D",c:"PLANT"},
+{y:114,n:12,q:"哺乳類胎兒在母體營養不良情況下,DNA序列與對照組相同,出生後免疫基因表現出現顯著差異且可遺傳至下一代。此現象最可能與何種分子機制有關?",o:["染色體易位造成基因調控異常","DNA損傷修復不完全導致此基因功能缺失","突變導致特定轉錄因子產生功能喪失變異","表觀遺傳修飾導致基因啟動子甲基化程度改變"],a:"D",c:"GEN"},
+{y:114,n:13,q:"孤立島嶼某隱性遺傳病等位基因a初始頻率0.8,A=0.2。某年10%人口從鄰近大陸移入(a頻率0.2)。新族群的等位基因a頻率最接近?",o:["0.70","0.74","0.76","0.80"],a:"B",c:"EVO"},
+{y:114,n:14,q:"承上,新族群迅速達Hardy-Weinberg平衡,第2代隱性遺傳病個體在族群中的預期占比?",o:["約49.0%","約54.8%","約57.8%","約64.0%"],a:"B",c:"EVO"},
+{y:114,n:15,q:"極端鹽濃度環境的原核生物,某些小分子或離子沿濃度梯度通過細胞膜不需耗能,何種物質最可能需要此類膜蛋白協助通過?",o:["氧氣O₂","鈉離子Na⁺","葡萄糖","小型脂溶性激素"],a:"B",c:"CELL"},
+{y:114,n:16,q:"被子植物維管束中木質部與韌皮部的細胞特性與運輸機制,下列何者最正確?",o:["木質部中的導管與管胞均需伴細胞協助進行主動運輸","韌皮部細胞壁富含木質素,以防止長距離輸送過程中管壁坍塌","韌皮部中篩管與伴細胞以胞間連絲連結,共同參與蔗糖主動運輸","木質部的運輸作用依賴質外體路徑與質膜運輸蛋白協同驅動"],a:"C",c:"PLANT"},
+{y:114,n:19,q:"C₄植物與CAM植物均演化出避免光呼吸機制,兩類在CO₂固定的主要差異,下列何者最正確?",o:["C₄和CAM植物皆以蘋果酸形式儲存CO₂,因此其能量消耗與糖產量相同","C₄植物在白天以PEP carboxylase固定CO₂,CAM植物在夜間以RuBisCO固定","C₄和CAM植物均經由CO₂濃縮機制增加RuBisCO的效率,完全避免光呼吸發生","C₄植物在不同細胞類型中分隔CO₂固定與卡爾文循環,CAM植物則在同一細胞中時間上分隔"],a:"D",c:"METAB"},
+{y:114,n:20,q:"果蠅基因A、B位於同一染色體,遺傳距離10cM,Ab/aB×ab/ab,後代具重組外表型約佔?",o:["5%","10%","20%","50%"],a:"B",c:"GEN"},
+{y:114,n:21,q:"鳥喙性狀適合度:AA=1.0、Aa=0.9、aa=0.6,A初始頻率p=0.7,下一代A等位基因的頻率p'最接近?",o:["0.725","0.735","0.745","0.755"],a:"B",c:"EVO"},
+{y:114,n:22,q:"豌豆遺傳實驗,F1自交獲得800顆種子,其中黃色621、綠色179。χ²檢定α=0.05、df=1臨界值3.84,下列敘述何者最合理?",o:["結果與預期有些微偏差,χ²值未達顯著而無法拒絕虛無假設","因自由度為2,必須查對其臨界值5.99來判定χ²是否呈現顯著","結果完全符合3:1的理論預期","由於觀察值不等於預期值,顯示此性狀不符合孟德爾定律,應拒絕虛無假設"],a:"A",c:"GEN"},
+{y:114,n:24,q:"夜間部分葉片觀察到水珠自葉緣排出的現象稱泌液現象(Guttation),其產生的生理原因最可能?",o:["蒸散停止後,根壓將水分推向導管並擠出至葉緣","氣孔打開後,葉部濃度降低造成水勢吸力引發泌液","葉部細胞代謝旺盛,使葉部內水勢極低而主動泌液","根部主動排水以維持細胞內張力恆定,避免水中毒"],a:"A",c:"PLANT"},
+{y:114,n:27,q:"細胞新陳代謝中,與多糖、脂肪、胺基酸和核苷酸的生合成都直接相關的途徑是?",o:["糖解作用","檸檬酸循環","卡爾文循環","電子傳遞鏈"],a:"B",c:"METAB"},
+{y:114,n:28,q:"113年3月寶林食物中毒案,下列何者錯誤?",o:["被認為與細菌產生的毒素汙染食物有關","該毒素抑制呼吸作用","使腺嘌呤核苷三磷酸未能離開粒線體","由於毒素專門攻擊呼吸系統,導致患者窒息"],a:"D",c:"METAB"},
+{y:114,n:29,q:"有關粒線體上電子傳遞鏈的敘述,下列何者最正確?",o:["電子傳遞鏈中的電子是被Acetyl CoA從葡萄糖移出來的","第一個傳遞電子進電子傳遞鏈的分子是FADH2","電子傳遞鏈藉電子的高能把質子幫浦到膜外,使高濃度質子回膜內時推動獲取ATP","帶高正電的氧是電子接受者,與氫作用成為水"],a:"C",c:"METAB"},
+{y:114,n:30,q:"使用生質燃料替代化石燃料有助於減緩全球暖化,被視為邁向淨零碳排的替代能源,其最主要的原因為何?",o:["生質能源的生成和燃燒是地表的碳循環,不致增加大氣中二氧化碳的總量","利用農業剩餘物為生質物,有助於扣抵自然分解所排放之二氧化碳","生質燃料排放的二氧化碳量低於化石燃料","生質能源的整體生命週期較化石燃料短"],a:"A",c:"ECO"},
+{y:114,n:32,q:"下列何者是與動物演化距離最近的生物類群?",o:["原核生物","原生動物","真菌","植物"],a:"C",c:"DIV"},
+{y:114,n:34,q:"所有真菌都是?",o:["有菌絲(Hyphae)的生物","異營性(Heterotrophic)","分解者(Decomposers)","共生者(Symbiotic)"],a:"B",c:"DIV"},
+{y:114,n:38,q:"以遺傳工程將基因插入Ti質體後,下一個步驟為何?",o:["將Ti質體送入植物細胞表達","將Ti質體送入農桿菌","剪切質體中的T DNA","以Ti質體轉形大腸桿菌"],a:"B",c:"GEN"},
+{y:114,n:41,q:"幽門螺旋桿菌感染患者的胃,下列何者錯誤?",o:["幽門螺旋桿菌外泌尿素中和胃酸,降低胃蛋白酶的活性","幽門螺旋桿菌製造大量的氨,使微棲地的酸性降低,以利生長拓殖","幽門螺旋桿菌定殖後分泌外毒素,引起胃上表皮細胞發炎","幽門螺旋桿菌產生以DNA為標的之毒素,引發胃癌"],a:"A",c:"DIV"},
+{y:114,n:45,q:"高強度運動導致肌肉痠痛,是因為肌纖維未及時獲得足夠的氧氣供應,致使下列何種現象發生?",o:["糖解作用受到抑制,葡萄糖分解減緩","糖解作用產生的丙酮酸積累","檸檬酸循環產生乳酸","欠缺電子接受者,電子傳遞鏈受到抑制,產生能量大幅降低"],a:"D",c:"METAB"},
+{y:114,n:50,q:"脊椎動物生殖季節與季節光照有關,下列敘述何者錯誤?",o:["生物節律由內分泌和神經系統調控","松果腺有感光細胞或連結視神經,於夜間釋出褪黑激素","夜晚時間長的季節,褪黑激素分泌量高","褪黑激素增加上視叉核(SCN)的活性,使全身細胞的生物時鐘與自然界的日長同步化"],a:"D",c:"ANIM"},
+
+/* ============= Campbell 章節重點補強題(原創) ============= */
+/* ----- METAB 能量與代謝 ----- */
+{y:0,n:1001,q:"[原創·METAB] 葡萄糖經糖解作用後生成丙酮酸,在無氧條件下,人體肌肉細胞會將丙酮酸轉變為下列何者?同時其主要生化目的為何?",o:["乙醇;再生NAD⁺以維持糖解持續進行","乳酸;再生NAD⁺以維持糖解持續進行","乙醯輔酶A;進入檸檬酸循環","草醯乙酸;補充TCA中間物","二氧化碳與水;產生更多ATP"],a:"B",c:"METAB",src:"orig",e:"無氧時電子傳遞鏈停擺,NADH無法被氧化回NAD⁺。肌肉細胞利用乳酸去氫酶將丙酮酸+NADH→乳酸+NAD⁺,讓糖解可以持續產ATP。"},
+{y:0,n:1002,q:"[原創·METAB] 一分子葡萄糖經完全有氧呼吸,理論上最多可產生約多少ATP?其中ATP合成酶利用什麼能量來合成ATP?",o:["約2 ATP;檸檬酸循環的高能受質磷酸化","約4 ATP;NADH直接釋放的能量","約30-32 ATP;質子電化學梯度(質子驅動力)","約36 ATP;ATP合成酶水解GTP","約38 ATP;氧氣直接氧化ADP"],a:"C",c:"METAB",src:"orig",e:"現代生理學教科書估算為30-32 ATP(過去常寫36-38 ATP是高估)。ATP合成酶利用質子(H⁺)從膜間腔回流至基質的化學滲透勢能合成ATP。"},
+{y:0,n:1003,q:"[原創·METAB] 在光合作用光反應中,水分子裂解(O₂的釋放)發生於何處?其電子最終的接受者為何?",o:["光系統I;NADP⁺","光系統II;NADP⁺","葉綠體基質;CO₂","類囊體腔內;O₂","細胞質;ADP"],a:"B",c:"METAB",src:"orig",e:"光系統II(P680)的水分解複合體把H₂O分解成O₂、H⁺、e⁻;非循環電子傳遞鏈最終把電子傳給NADP⁺生成NADPH。"},
+{y:0,n:1004,q:"[原創·METAB] 卡爾文循環中,RuBisCO催化的固碳反應產物經一系列還原最終生成G3P,每生成一分子葡萄糖所需CO₂、ATP、NADPH分別為多少?",o:["3 CO₂、6 ATP、6 NADPH","6 CO₂、12 ATP、12 NADPH","6 CO₂、18 ATP、12 NADPH","12 CO₂、18 ATP、12 NADPH","6 CO₂、6 ATP、12 NADPH"],a:"C",c:"METAB",src:"orig",e:"6×CO₂→2×G3P→1×glucose;每個CO₂固定需3 ATP+2 NADPH,故6×CO₂需18 ATP+12 NADPH。"},
+{y:0,n:1005,q:"[原創·METAB] 解偶聯劑(uncoupler)如2,4-DNP對粒線體的作用為何?",o:["抑制ATP合成酶活性,ATP產量下降但耗氧量不變","破壞質子梯度,ATP產量下降但耗氧量增加(熱產生增加)","直接抑制電子傳遞鏈,ATP和耗氧量均下降","抑制檸檬酸循環,使NADH產量下降","促進ATP合成酶效率,ATP產量增加"],a:"B",c:"METAB",src:"orig",e:"解偶聯劑讓質子可不經ATP合成酶就回流,梯度維持不住→ATP少,但電子傳遞與耗氧加速,能量以熱散失(類似棕色脂肪UCP1)。"},
+{y:0,n:1006,q:"[原創·METAB] 競爭性抑制劑與非競爭性抑制劑對酵素動力學參數的影響,下列何者正確?",o:["競爭性:Vmax變小、Km不變","競爭性:Vmax不變、Km變大","非競爭性:Vmax變大、Km變小","非競爭性:Vmax不變、Km變大","兩者均使Km和Vmax同時降低"],a:"B",c:"METAB",src:"orig",e:"競爭性抑制劑搶受質結合位,加更多受質可克服→Vmax不變,但達到Vmax/2需更多受質→Km變大。非競爭性結合在別處→Vmax降低、Km不變。"},
+{y:0,n:1007,q:"[原創·METAB] β-氧化(beta-oxidation)發生於下列何處?每一輪β-氧化會產生哪些產物?",o:["細胞質;1個Acetyl-CoA + 1個NADH + 1個FADH2","粒線體基質;1個Acetyl-CoA + 1個NADH + 1個FADH2","內質網;2個Acetyl-CoA + 2個NADH","過氧化體;1個Acetyl-CoA + 1個ATP","細胞核;1個Acetyl-CoA + 1個GTP"],a:"B",c:"METAB",src:"orig",e:"動物細胞的脂肪酸β-氧化主要在粒線體基質。每一輪移走兩個碳產生1×Acetyl-CoA,並產生1×NADH和1×FADH2。"},
+{y:0,n:1008,q:"[原創·METAB] CAM植物與C4植物在CO₂濃縮機制上的差異為何?",o:["CAM在不同細胞分隔,C4在不同時間分隔","CAM在不同時間(夜固定/日還原)分隔,C4在不同細胞(葉肉/維管束鞘)分隔","兩者都在不同時間分隔","兩者都使用RuBisCO作為初始固定酵素","CAM不使用PEP carboxylase,C4使用之"],a:"B",c:"METAB",src:"orig",e:"CAM(如仙人掌):夜開氣孔以PEP-Case固定CO₂為蘋果酸儲存,日進行卡爾文。C4(如玉米):空間上葉肉細胞先固定為4C,維管束鞘細胞釋放CO₂給卡爾文。"},
+
+/* ----- GEN 遺傳/分子生物 ----- */
+{y:0,n:1101,q:"[原創·GEN] DNA複製過程中,延遲股(lagging strand)合成需要多種酵素配合。下列關於岡崎片段(Okazaki fragments)合成順序的敘述,何者最正確?",o:["DNA聚合酶III先合成→引子酶移除引子→DNA聚合酶I填補→連接酶接合","引子酶合成RNA引子→DNA聚合酶III延伸→DNA聚合酶I移除引子並填補→連接酶接合","DNA聚合酶I先延伸→引子酶切割→連接酶接合→DNA聚合酶III填補","解旋酶切割→引子酶填補→連接酶接合→DNA聚合酶III檢查","拓樸異構酶合成引子→連接酶接合→DNA聚合酶III修正"],a:"B",c:"GEN",src:"orig",e:"延遲股合成順序:引子酶(primase)鋪RNA引子→DNA pol III延伸→DNA pol I用5'→3' exonuclease活性移除RNA引子並填DNA→DNA連接酶接合切口。"},
+{y:0,n:1102,q:"[原創·GEN] 真核生物pre-mRNA成熟過程中,5'端加帽、剪接、3'端加poly(A)尾這三個事件的時序最正確為?",o:["三者依序發生,完全結束後才開始下一步","三者完全獨立、互不影響","加帽幾乎與轉錄起始同時發生,剪接和polyA可在轉錄進行中發生(共轉錄修飾)","必先剪接才能加帽","在細胞質中完成所有修飾"],a:"C",c:"GEN",src:"orig",e:"真核mRNA加工大多為共轉錄(co-transcriptional):RNA pol II轉錄出5'端後CTD立即招募加帽酶,內含子可在轉錄持續中陸續被剪接,3'端切割+polyA於polyadenylation site出現後進行。"},
+{y:0,n:1103,q:"[原創·GEN] 一段mRNA上的密碼子由5'-AUG GCC UUC UAA-3'組成,則轉譯出的胜肽序列為(讀取方向 N→C 端):",o:["Met-Ala-Phe(然後終止)","Met-Gly-Phe-Stop","Met-Ala-Phe-Stop(終止後仍會繼續延伸)","僅 Met,因為AUG後是終止","Phe-Met-Ala(逆向讀取)"],a:"A",c:"GEN",src:"orig",e:"AUG=Met起始、GCC=Ala、UUC=Phe、UAA=終止密碼子。終止密碼子由釋放因子辨識而非tRNA,胜肽鏈停在Phe後釋放,故產物為Met-Ala-Phe。"},
+{y:0,n:1104,q:"[原創·GEN] 大腸桿菌的lac operon中,下列何種狀況最能促使結構基因(lacZ、lacY、lacA)強烈表現?",o:["環境中只有葡萄糖,無乳糖","環境中同時有大量葡萄糖和乳糖","環境中無葡萄糖、有乳糖","環境中無葡萄糖也無乳糖","抑制蛋白(repressor)永久結合operator"],a:"C",c:"GEN",src:"orig",e:"lac operon受負向(乳糖→變inducer→repressor脫離)和正向(無葡萄糖→cAMP高→CAP-cAMP活化轉錄)雙重調控。最佳表現條件是無葡萄糖+有乳糖。"},
+{y:0,n:1105,q:"[原創·GEN] 性聯隱性遺傳疾病(如血友病)的譜系特徵,下列何者正確?",o:["父親患病,女兒必為患者","母親是帶因者,兒子有1/2機率患病","男女患病比例相同","可發生父傳子的純男性遺傳","女兒患病代表父親必正常"],a:"B",c:"GEN",src:"orig",e:"X-linked recessive特徵:男性遠多於女性患者;父親是患者→女兒必帶因(不一定患病);帶因母親(X^A X^a)的兒子有50%機會得到X^a而患病;不會父傳子(父親給兒子的是Y)。"},
+{y:0,n:1106,q:"[原創·GEN] 某基因A與基因B位於同一染色體,雙雜合子親本AB/ab進行試交(× ab/ab),後代:AB/ab=420、ab/ab=410、Ab/ab=85、aB/ab=85。則A與B之間的圖距(map units)最接近?",o:["8.5 mu","17 mu","42 mu","50 mu","85 mu"],a:"B",c:"GEN",src:"orig",e:"重組頻率=重組型/總數=(85+85)/(420+410+85+85)=170/1000=17%。1%重組頻率=1 mu,故距離≈17 mu。"},
+{y:0,n:1107,q:"[原創·GEN] 點突變類型中,何者最可能造成蛋白質完全失去功能?",o:["靜默突變(silent mutation)","錯義突變發生於非活性區的胺基酸","無義突變(nonsense mutation)發生於密碼子前段","保守替換(conservative substitution)","內含子中的單鹼基取代"],a:"C",c:"GEN",src:"orig",e:"無義突變產生過早終止密碼子(premature stop),若發生在密碼子前段,蛋白質被截斷成短小無功能的片段,影響最嚴重。靜默突變不改胺基酸;保守替換通常不影響功能。"},
+{y:0,n:1108,q:"[原創·GEN] CRISPR-Cas9基因編輯系統執行剪切時,下列哪一個元件直接負責「辨認標的DNA序列」?",o:["Cas9蛋白","tracrRNA","sgRNA(guide RNA)的spacer序列","PAM序列","DNA連接酶"],a:"C",c:"GEN",src:"orig",e:"sgRNA的spacer(約20 nt)以鹼基互補方式辨認標的DNA;Cas9是核酸內切酶執行雙股剪切;PAM(如NGG)是Cas9辨識的旁側序列、由Cas9本身辨識而非由RNA。"},
+
+/* ----- CELL 細胞學 ----- */
+{y:0,n:1201,q:"[原創·CELL] 真核細胞的內膜系統(endomembrane system)中,蛋白質從內質網運送到細胞外的正確路徑為?",o:["核糖體→內質網→溶酶體→細胞膜→細胞外","粗糙內質網→運輸囊泡→cis-高基氏→trans-高基氏→分泌囊泡→細胞外","平滑內質網→粒線體→高基氏→細胞外","核糖體→直接分泌至細胞外","高基氏→內質網→分泌囊泡→細胞外"],a:"B",c:"CELL",src:"orig",e:"分泌路徑:核糖體於RER合成→內質網修飾→COPII囊泡運至cis-Golgi→經trans-Golgi逐步加工醣化→分泌囊泡與細胞膜融合(胞吐作用)釋出。"},
+{y:0,n:1202,q:"[原創·CELL] G蛋白偶聯受體(GPCR)的訊息傳遞中,當配體結合後,訊息放大效應主要透過下列哪一機制?",o:["受體本身有酪胺酸激酶活性,直接磷酸化基質","活化的Gα次單元活化下游酵素(如腺苷酸環化酶)產生大量第二信使(如cAMP)","受體進入細胞核直接調控基因","Gβγ次單元水解GTP產能","直接打開離子通道讓所有離子進入"],a:"B",c:"CELL",src:"orig",e:"GPCR本身無催化活性。配體結合→Gα結合GTP脫離→活化adenylyl cyclase→1個酵素產生大量cAMP→活化PKA→磷酸化下游受質,訊號逐級放大。"},
+{y:0,n:1203,q:"[原創·CELL] 細胞膜流體性會受哪些因素影響?下列敘述何者正確?",o:["膽固醇在高溫時降低流動性、低溫時提高流動性,起緩衝作用","飽和脂肪酸增加流動性","所有脂質與蛋白都不能在膜上水平移動","低溫提高膜流動性","醣蛋白才是流動的主要貢獻者"],a:"A",c:"CELL",src:"orig",e:"膽固醇在動物細胞膜中扮演「流動性緩衝」:高溫時填入脂尾間限制過度流動;低溫時阻止脂尾過度緊密堆積維持流動性。不飽和脂肪酸(雙鍵彎折)和高溫提高流動性。"},
+{y:0,n:1204,q:"[原創·CELL] 主動運輸與促進擴散的最主要差異為?",o:["主動運輸需要載體蛋白,促進擴散不需要","主動運輸可逆濃度梯度移動分子且需消耗ATP,促進擴散沿濃度梯度且不耗能","主動運輸只運送大分子,促進擴散只運送小分子","主動運輸不需專一性,促進擴散需要專一性","兩者完全相同"],a:"B",c:"CELL",src:"orig",e:"兩者都用蛋白質且具專一性。差異在能量:主動運輸(如Na⁺/K⁺幫浦)逆梯度運送、需ATP;促進擴散(如葡萄糖GLUT)沿梯度、不需要能量。"},
+{y:0,n:1205,q:"[原創·CELL] 細胞週期檢查點中,G1/S檢查點主要監控的事項及主要參與分子為?",o:["DNA複製是否完成;Cdk1-cyclin B","染色體是否正確排列;APC/C","DNA是否損傷及細胞大小是否足夠;p53、Rb、Cdk4/6-cyclin D","紡錘體是否組裝;Aurora kinase","核仁是否解體;Lamin"],a:"C",c:"CELL",src:"orig",e:"G1/S(restriction point)是細胞「決定是否進入S期」的關鍵點:檢查DNA損傷、營養、生長因子、細胞大小。p53感應DNA損傷→p21抑制Cdk;Rb未磷酸化時抑制E2F阻止S期。"},
+{y:0,n:1206,q:"[原創·CELL] 細胞凋亡(apoptosis)與細胞壞死(necrosis)的差異,下列何者正確?",o:["細胞凋亡會引起發炎反應,壞死則否","兩者均由caspase執行","細胞凋亡細胞膜保持完整、形成凋亡小體被吞噬;壞死細胞膜破裂釋放內容物引起發炎","壞死是程式性死亡,凋亡是意外死亡","凋亡只在病態狀況發生"],a:"C",c:"CELL",src:"orig",e:"凋亡(programmed):caspase級聯、染色質凝縮、形成apoptotic bodies被吞噬、不發炎;壞死(necrosis):膜破裂、內容物外洩誘發發炎反應。"},
+{y:0,n:1207,q:"[原創·CELL] 動物細胞分裂時,胞質分裂(cytokinesis)主要靠下列何種結構執行?植物細胞則?",o:["動物:微管環縮;植物:細胞板","動物:肌動蛋白-肌凝蛋白收縮環(contractile ring);植物:細胞板由高基氏體囊泡融合形成","動物:中間絲;植物:細胞壁向內生長","動物:核膜分裂;植物:液泡分裂","動物與植物機制相同"],a:"B",c:"CELL",src:"orig",e:"動物細胞:actin+myosin形成收縮環在赤道處由外向內縊縮(cleavage furrow)。植物細胞:高基氏體囊泡(含細胞壁前驅物)沿赤道融合形成cell plate由內向外建立新細胞壁。"},
+{y:0,n:1208,q:"[原創·CELL] 內共生學說(endosymbiotic theory)主張粒線體和葉綠體源自被吞噬的原核生物。下列何項證據最支持此學說?",o:["兩者均含環狀DNA、有自己的核糖體(70S)、雙層膜","兩者大小都比細胞核大","兩者都不能自我複製","它們的DNA被組蛋白包覆","它們可離開細胞獨立存活"],a:"A",c:"CELL",src:"orig",e:"支持內共生的關鍵證據:(1)雙層膜(內膜源自原核質膜、外膜源自吞噬囊泡);(2)環狀DNA;(3)70S核糖體(類似細菌);(4)以二分裂繁殖;(5)DNA序列分析顯示與α-變型菌(粒線體)、藍綠菌(葉綠體)親緣最近。"},
+
+/* ============= 章節重點補強題 · 化學基礎 (CHEM) ============= */
+{y:0,n:1301,q:"[原創·CHEM] 水分子之所以對生命如此重要,以下哪一項特性不是直接因為氫鍵造成的?",o:["高比熱可緩衝溫度變化","表面張力使昆蟲能在水面行走","冰的密度小於液態水","水分子是電中性"],a:"D",c:"CHEM",src:"orig",e:"水分子的高比熱、表面張力、冰浮於水(密度差)都源於水分子間的氫鍵網絡。電中性是因為正負電荷總和為零,與氫鍵無直接關係。"},
+{y:0,n:1302,q:"[原創·CHEM] 下列關於有機分子官能基的配對,何者錯誤?",o:["羥基(-OH):親水性,出現於醇類","羰基(C=O):醛或酮的特徵","胺基(-NH₂):弱鹼性,在水中可接受質子","硫氫基(-SH):強酸性,常見於核酸"],a:"D",c:"CHEM",src:"orig",e:"硫氫基(-SH)出現在含硫胺基酸(半胱胺酸、甲硫胺酸)而非核酸。其在生理pH下幾乎不解離,可形成雙硫鍵協助蛋白質摺疊。核酸的特徵官能基是磷酸根與含氮鹼基。"},
+{y:0,n:1303,q:"[原創·CHEM] 蛋白質的四級結構是指?",o:["胺基酸的線性序列","α-螺旋與β-摺板的組成","單一多肽鏈經摺疊形成的三維形狀","由兩個或以上的多肽鏈次單元組合形成的功能性蛋白質"],a:"D",c:"CHEM",src:"orig",e:"一級=胺基酸序列;二級=α-helix、β-sheet;三級=單一多肽鏈的三維結構;四級=多個次單元的組合(如血紅素 α₂β₂)。"},
+{y:0,n:1304,q:"[原創·CHEM] 飽和脂肪酸與不飽和脂肪酸最主要的差異為?",o:["飽和脂肪酸含有較多碳原子","不飽和脂肪酸含有碳-碳雙鍵,使分子彎折,熔點較低","飽和脂肪酸僅出現在植物","不飽和脂肪酸無法被人體吸收"],a:"B",c:"CHEM",src:"orig",e:"不飽和脂肪酸的順式雙鍵(cis double bond)使碳鏈彎折,分子無法緊密堆積,因此熔點較低、室溫下為液態(植物油)。飽和脂肪酸碳鏈直,可緊密堆積,室溫下為固態(動物脂肪)。"},
+{y:0,n:1305,q:"[原創·CHEM] DNA與RNA結構上的主要差異不包括?",o:["DNA為雙股,RNA通常為單股","DNA含去氧核糖,RNA含核糖","DNA含胸腺嘧啶(T),RNA含尿嘧啶(U)","DNA以磷酸二酯鍵連接,RNA以氫鍵連接"],a:"D",c:"CHEM",src:"orig",e:"DNA和RNA的相鄰核苷酸都是以磷酸二酯鍵(phosphodiester bond)連接。氫鍵是DNA雙股之間鹼基配對的鍵結,不是同一股相鄰核苷酸間的鍵結。"},
+{y:0,n:1306,q:"[原創·CHEM] 血液pH值正常維持在7.35-7.45,主要靠下列哪一個緩衝系統?",o:["磷酸鹽緩衝系統","蛋白質緩衝系統","碳酸-碳酸氫鹽緩衝系統(H₂CO₃/HCO₃⁻)","氨/銨緩衝系統"],a:"C",c:"CHEM",src:"orig",e:"血液主要靠 H₂CO₃/HCO₃⁻ 系統:CO₂+H₂O ⇌ H₂CO₃ ⇌ H⁺+HCO₃⁻。肺臟調節 CO₂、腎臟調節 HCO₃⁻,維持血液pH穩定。蛋白質和磷酸鹽是次要緩衝。"},
+{y:0,n:1307,q:"[原創·CHEM] 關於酵素與受質結合的「誘導契合(induced fit)」模型,何者最正確?",o:["酵素活性中心是剛性結構,只能接受完全吻合的受質","受質結合時,酵素活性中心會發生構型微調以更貼合受質","酵素必須先變性才能與受質結合","所有酵素皆透過共價鍵與受質永久結合"],a:"B",c:"CHEM",src:"orig",e:"誘導契合模型(Koshland)取代了較早的「鎖鑰模型」(lock-and-key)。受質接近活性中心時,誘導活性中心構型微調,讓酵素-受質複合體更穩定,進而催化反應。"},
+{y:0,n:1308,q:"[原創·CHEM] 以下哪一個鍵結最弱,但對於 DNA 雙螺旋穩定性與蛋白質摺疊極為重要?",o:["共價鍵","離子鍵","氫鍵","雙硫鍵"],a:"C",c:"CHEM",src:"orig",e:"氫鍵單獨很弱(約 2-10 kJ/mol),但大量氫鍵(DNA 雙股間 A=T 兩個、G≡C 三個氫鍵;蛋白質 α-helix、β-sheet 內氫鍵)累加起來提供關鍵穩定性。能量低使結構可動態解開(如 DNA 複製時)。"},
+
+/* ============= 章節重點補強題 · 演化 (EVO) ============= */
+{y:0,n:1401,q:"[原創·EVO] Hardy-Weinberg 平衡的成立需要五項假設,下列何者不是必要假設?",o:["族群很大(無遺傳漂變)","沒有突變","沒有遷移","隨機交配","族群中對偶基因頻率必須各為 0.5"],a:"E",c:"EVO",src:"orig",e:"Hardy-Weinberg 五項假設:大族群、無突變、無遷移、隨機交配、無天擇。對偶基因頻率可以是任何值(只要 p+q=1),平衡公式 p²+2pq+q²=1 在任何頻率下都成立。"},
+{y:0,n:1402,q:"[原創·EVO] 下列何者最能代表「適合度(fitness)」在演化生物學上的意義?",o:["個體的體型大小","個體的肌肉力量","個體一生中能存活並產下可繁殖後代的數量","族群的總個體數"],a:"C",c:"EVO",src:"orig",e:"演化適合度(Darwinian fitness)= 個體將其基因傳給下一代的相對成功率。重點不只是存活,還要能繁殖且後代也能繁殖(reproductive success)。"},
+{y:0,n:1403,q:"[原創·EVO] 異域種化(allopatric speciation)與同域種化(sympatric speciation)的主要差別在於?",o:["時間長短","是否有物理性的地理隔離","是否涉及生殖隔離","是否需要突變"],a:"B",c:"EVO",src:"orig",e:"異域種化:族群被山脈、河流、海洋等物理屏障隔開,各自演化形成新種。同域種化:在同一地理區內因生態棲位、行為、多倍體化等機制造成生殖隔離(植物的多倍體化是同域種化最常見的方式)。"},
+{y:0,n:1404,q:"[原創·EVO] 在一個族群中觀察到 a 對偶基因頻率(q)逐代上升、A(p)逐代下降。這最不可能是下列何種演化機制造成?",o:["天擇對 aa 個體有利","遺傳漂變(在小族群中)","新突變持續從 A → a","隨機交配(無其他演化壓力)"],a:"D",c:"EVO",src:"orig",e:"隨機交配本身只會維持 Hardy-Weinberg 平衡,不會改變對偶基因頻率。頻率持續變化必定來自天擇、漂變、突變或遷移其中之一。"},
+{y:0,n:1405,q:"[原創·EVO] 鯨魚的鰭與蝙蝠的翅膀,在演化上稱為?",o:["同功構造(analogous structures)","同源構造(homologous structures)","退化構造(vestigial structures)","趨同構造"],a:"B",c:"EVO",src:"orig",e:"鯨鰭與蝠翅內部骨骼結構相同(肱骨、橈尺骨、腕骨、指骨)→ 同源構造,源自共同祖先的前肢。同功構造則是功能類似但起源不同(如鳥翅 vs 昆蟲翅)。"},
+{y:0,n:1406,q:"[原創·EVO] 某蛾類在工業革命後的城市區域,深色個體比例由 5% 上升至 95%,亮色個體則大幅下降。此最能說明哪一種天擇模式?",o:["穩定型天擇(stabilizing)","方向性天擇(directional)","分歧型天擇(disruptive)","頻率依賴型天擇"],a:"B",c:"EVO",src:"orig",e:"工業黑化(industrial melanism,經典案例為英國胡椒蛾)是方向性天擇:環境改變(樹皮被煤煙染黑)使深色個體在天敵眼中較不顯眼,適合度提高,族群表現型平均值朝深色端移動。"},
+{y:0,n:1407,q:"[原創·EVO] 一族群中 AA=180、Aa=240、aa=80,共 500 個體。A 對偶基因頻率(p)為?",o:["0.36","0.48","0.60","0.72"],a:"C",c:"EVO",src:"orig",e:"p = (2×AA + Aa)/(2×總數) = (2×180 + 240)/(2×500) = 600/1000 = 0.60。或:p = AA頻率 + Aa頻率/2 = 0.36 + 0.48/2 = 0.60。"},
+{y:0,n:1408,q:"[原創·EVO] 內共生學說(endosymbiosis)解釋了真核細胞的哪一個演化關鍵事件?",o:["原核細胞起源","粒線體和葉綠體的起源","脊椎動物的起源","多細胞生物的起源"],a:"B",c:"EVO",src:"orig",e:"Lynn Margulis 提出:粒線體源自被吞入的α-變型菌(好氧細菌);葉綠體源自被吞入的藍綠菌。雙層膜、環狀DNA、70S 核糖體、二分裂繁殖等證據強力支持。"},
+
+/* ============= 章節重點補強題 · 生物多樣性 (DIV) ============= */
+{y:0,n:1501,q:"[原創·DIV] 三域系統(three-domain system)將所有生物分為哪三個域?",o:["原核、真核、病毒","植物、動物、真菌","細菌(Bacteria)、古細菌(Archaea)、真核生物(Eukarya)","原生生物、植物、動物"],a:"C",c:"DIV",src:"orig",e:"Carl Woese 透過 16S/18S rRNA 序列分析提出三域系統:Bacteria、Archaea(古細菌與真核生物親緣較近,擁有獨特的膜脂、無肽聚糖細胞壁)、Eukarya。病毒不被認為是「生物」,故不屬於任何一域。"},
+{y:0,n:1502,q:"[原創·DIV] 革蘭氏陽性菌與陰性菌染色結果不同,主因為何?",o:["陽性菌有外膜,陰性菌沒有","陽性菌有厚的肽聚糖層保留結晶紫;陰性菌肽聚糖薄且有外膜,結晶紫被酒精洗掉","陽性菌是球菌,陰性菌是桿菌","陽性菌會運動,陰性菌不會"],a:"B",c:"DIV",src:"orig",e:"格蘭氏陽性:厚肽聚糖層(20-80 nm)鎖住結晶紫-碘複合體 → 紫色。陰性:薄肽聚糖(2-7 nm)+外膜(含 LPS),酒精溶解外膜後染料流失,需番紅複染 → 粉紅色。陰性菌的 LPS 是內毒素來源。"},
+{y:0,n:1503,q:"[原創·DIV] 病毒不被視為「活生物」的最主要原因為何?",o:["病毒太小無法看見","病毒無法獨立進行代謝與繁殖,必須寄生於宿主細胞","病毒不含核酸","病毒不會演化"],a:"B",c:"DIV",src:"orig",e:"病毒缺乏自主代謝(無核糖體、無酵素系統)、無法獨立複製,需劫持宿主細胞的機制。但其遺傳物質(DNA/RNA)會突變並接受天擇,因此病毒會演化(疫苗每年要更新就是因為演化)。"},
+{y:0,n:1504,q:"[原創·DIV] 反轉錄病毒(retrovirus,如 HIV)的特徵為?",o:["以 DNA 為遺傳物質,複製為 RNA","以 RNA 為遺傳物質,經反轉錄酶合成 cDNA 並嵌入宿主基因組","以 DNA 為遺傳物質,在細胞質中複製","沒有遺傳物質"],a:"B",c:"DIV",src:"orig",e:"HIV 等反轉錄病毒攜帶 RNA + 反轉錄酶。進入細胞後,反轉錄酶將 RNA → cDNA → 雙股 DNA → 由 integrase 嵌入宿主染色體成為 provirus。這也是 HIV 難以根治的原因之一。"},
+{y:0,n:1505,q:"[原創·DIV] 真菌的細胞壁主要成分為?",o:["纖維素","幾丁質(chitin)","肽聚糖","木質素"],a:"B",c:"DIV",src:"orig",e:"真菌細胞壁主要為幾丁質(N-乙醯葡萄糖胺聚合物),與昆蟲外骨骼相同。植物細胞壁是纖維素;細菌細胞壁是肽聚糖;這是分類上重要的特徵。"},
+{y:0,n:1506,q:"[原創·DIV] 下列何者屬於「後口動物(deuterostomes)」?",o:["昆蟲","蝸牛","海星","蚯蚓"],a:"C",c:"DIV",src:"orig",e:"後口動物:胚胎發育時胚孔(blastopore)發育為肛門,口為後形成。包括棘皮動物(海星、海膽)和脊索動物(脊椎動物)。原口動物(蚯蚓、蝸牛、昆蟲)則胚孔發育為口。"},
+{y:0,n:1507,q:"[原創·DIV] 蕨類植物與苔蘚類植物的關鍵差異為?",o:["蕨類有真正的維管束(木質部、韌皮部),苔蘚沒有","苔蘚有花,蕨類沒有","蕨類用種子繁殖,苔蘚用孢子","蕨類有葉綠素,苔蘚沒有"],a:"A",c:"DIV",src:"orig",e:"蕨類是最早的維管束植物(木質部+韌皮部),可長得高大。苔蘚為無維管束植物,植株矮小、依賴擴散運送水分養分,需貼地生長。兩者都用孢子繁殖、皆有世代交替。"},
+{y:0,n:1508,q:"[原創·DIV] 朊毒體(prion)導致疾病的機制為?",o:["以 DNA 整合到宿主基因組","誘導正常蛋白質摺疊成異常構型,並連鎖傳染給其他正常蛋白","產生毒素破壞細胞","活化免疫系統造成自體免疫攻擊"],a:"B",c:"DIV",src:"orig",e:"朊毒體是錯誤摺疊的 PrPSc 蛋白(無 DNA、RNA),可誘導正常 PrPC 轉變為 PrPSc,逐步累積形成澱粉樣斑塊,造成腦部海綿狀變性。代表疾病:庫賈氏病、狂牛病、克魯症。"},
+
+/* ============= 章節重點補強題 · 植物學 (PLANT) ============= */
+{y:0,n:1601,q:"[原創·PLANT] 植物根部從土壤吸收水分後,水分通過根部到達木質部的兩條主要路徑為?",o:["共質體(symplast)路徑與質外體(apoplast)路徑","主動運輸與被動運輸","蒸散流與根壓","共生體與寄生體"],a:"A",c:"PLANT",src:"orig",e:"質外體路徑:水沿細胞壁與細胞間隙移動(快但被凱氏帶阻擋);共質體路徑:水經細胞質、由胞間連絲在細胞間流動。凱氏帶(Casparian strip)強迫水必須進入細胞內,有篩選作用。"},
+{y:0,n:1602,q:"[原創·PLANT] 蒸散作用的主要驅動力為?",o:["根壓","葉片上氣孔的水分蒸發產生的吸力(蒸散拉力)","土壤的滲透壓","植物的主動運輸"],a:"B",c:"PLANT",src:"orig",e:"蒸散-內聚-張力學說:葉片氣孔水分蒸發 → 葉肉細胞缺水 → 拉動木質部水柱(水分子內聚力 cohesion 不斷裂)→ 從根部一路向上拉。根壓只在夜間或清晨次要貢獻(如泌液現象)。"},
+{y:0,n:1603,q:"[原創·PLANT] 下列植物激素的作用配對,何者錯誤?",o:["生長素(auxin):促進細胞延長、形成頂端優勢","細胞分裂素(cytokinin):促進細胞分裂、延緩老化","吉貝素(gibberellin):促進種子萌發、莖延長","離層酸(ABA):促進氣孔開啟、打破種子休眠"],a:"D",c:"PLANT",src:"orig",e:"離層酸(abscisic acid)的作用恰好相反:促進氣孔關閉(乾旱反應)、誘導種子休眠。乙烯則促進果實成熟、葉片脫落、三相反應。"},
+{y:0,n:1604,q:"[原創·PLANT] 短日照植物(short-day plants)在以下何種情況下會開花?",o:["夜長超過臨界值","日長超過臨界值","夜長被紅光閃爍中斷","無論光週期如何"],a:"A",c:"PLANT",src:"orig",e:"植物實際感應的是「夜長」(連續黑暗時間)。短日照植物=長夜植物:需連續黑暗 ≥ 臨界夜長才開花。若黑暗中段被紅光閃爍中斷,連續夜長被打斷 → 不開花。光敏素(phytochrome)是感應器。"},
+{y:0,n:1605,q:"[原創·PLANT] 被子植物的雙重受精(double fertilization)指?",o:["兩個花粉粒同時受精同一個卵","一個精核與卵結合形成胚(2n);另一個精核與兩個極核結合形成胚乳(3n)","兩個卵被同一精核受精","植物每年受精兩次"],a:"B",c:"PLANT",src:"orig",e:"被子植物特有:花粉粒釋出 2 個精細胞,1 個 + 卵 → 二倍體胚(zygote);另 1 個 + 2 個極核 → 三倍體胚乳(endosperm,提供胚發育的養分)。這是被子植物相較於裸子植物的重要演化創新。"},
+{y:0,n:1606,q:"[原創·PLANT] C4 植物相較於 C3 植物的優勢主要在?",o:["寒冷氣候下生長","高溫高光照、低 CO₂ 環境下減少光呼吸,提高光合作用效率","缺水環境完全不需要水","可在地下生長"],a:"B",c:"PLANT",src:"orig",e:"C4 植物(玉米、甘蔗)用 PEP carboxylase 在葉肉細胞先固定 CO₂ 為四碳酸,送到維管束鞘細胞濃縮 CO₂ 再進卡爾文循環。高溫時 RuBisCO 易發生光呼吸,C4 機制可避免。CAM 植物則靠時間分隔(夜間固碳)。"},
+{y:0,n:1607,q:"[原創·PLANT] 韌皮部運輸的「壓力流假說(pressure flow hypothesis)」,糖類由?",o:["葉片(source)→ 根/果實(sink),由滲透壓差驅動水流而推動糖移動","根 → 葉,由蒸散流驅動","木質部直接運輸","氣孔擴散運輸"],a:"A",c:"PLANT",src:"orig",e:"來源(source,如成熟葉)主動裝載蔗糖入篩管 → 水分滲入提高壓力;匯聚地(sink,如根、果實、花)卸載糖分 → 水分流出降低壓力。壓力梯度推動篩管內溶液流動。雙向、可從下往上或從上往下。"},
+{y:0,n:1608,q:"[原創·PLANT] 植物的初生生長(primary growth)與次生生長(secondary growth)主要差別在?",o:["初生生長使植物變高/變長(由頂端分生組織);次生生長使植物變粗(由側生分生組織如形成層)","初生生長只發生在草本植物","次生生長發生在地下","兩者沒有差別"],a:"A",c:"PLANT",src:"orig",e:"初生生長:apical meristem(根尖、莖頂端)→ 加長。次生生長:lateral meristem(維管形成層 vascular cambium 產生次生木質部與韌皮部;木栓形成層 cork cambium 產生樹皮)→ 加粗。多年生木本植物兩者皆有,單子葉植物大多無次生生長。"},
+
+/* ============= 章節重點補強題 · 動物生理 (ANIM) ============= */
+{y:0,n:1701,q:"[原創·ANIM] 神經元動作電位的去極化階段(depolarization)主要由何離子內流造成?",o:["K⁺","Na⁺","Cl⁻","Ca²⁺"],a:"B",c:"ANIM",src:"orig",e:"靜止電位 ≈ -70 mV(K⁺ 平衡電位附近)。閾值刺激 → 電壓門控 Na⁺ 通道開啟 → Na⁺ 大量內流 → 膜電位快速朝 +30 mV 升高(去極化)。隨後 Na⁺ 通道失活、K⁺ 通道開啟 → K⁺ 外流 → 再極化。"},
+{y:0,n:1702,q:"[原創·ANIM] 心臟由 SA 結(竇房結)發出衝動,正確的傳導路徑為?",o:["SA結 → AV結 → 房室束(His束) → 浦金氏纖維 → 心室肌","SA結 → 心室 → AV結","SA結 → 浦金氏纖維 → AV結 → 心房","AV結 → SA結 → His束"],a:"A",c:"ANIM",src:"orig",e:"標準路徑:SA(自律起搏點,~70 bpm)→ 心房收縮 → AV(短暫延遲讓心房排空)→ Bundle of His → 左右束支 → Purkinje fibers → 心室同步收縮。"},
+{y:0,n:1703,q:"[原創·ANIM] 腎臟近曲小管(proximal tubule)的主要功能為?",o:["濾液中大部分鈉、水、葡萄糖、胺基酸的再吸收(約 65%)","製造尿液","調節血壓","分泌紅血球生成素"],a:"A",c:"ANIM",src:"orig",e:"近曲小管:Na⁺ 主動運出基側膜 → Na⁺ 帶葡萄糖、胺基酸、HCO₃⁻ 同向運輸入血;水隨滲透回收;約 65% 濾液在這裡再吸收。亨耳氏環濃縮、遠曲與集尿管精細調節(受 ADH、aldosterone 控制)。"},
+{y:0,n:1704,q:"[原創·ANIM] 胰島素由何處分泌?其主要作用為?",o:["胰島α細胞;升高血糖","胰島β細胞;降低血糖(促進葡萄糖進入細胞、合成肝醣與脂肪)","胰島δ細胞;抑制其他激素","腎上腺髓質;升血糖"],a:"B",c:"ANIM",src:"orig",e:"β細胞:血糖↑時分泌胰島素 → 肌肉/脂肪細胞 GLUT4 上膜攝取葡萄糖、肝合成肝醣;α細胞分泌昇糖素(血糖↓時),作用相反。第一型糖尿病=β細胞被自體免疫破壞;第二型=胰島素阻抗。"},
+{y:0,n:1705,q:"[原創·ANIM] 血液中 CO₂ 主要以哪種形式運輸?",o:["以溶解氣體形式(占約 7%)","與血紅素結合形成 carbaminohemoglobin(占約 23%)","以碳酸氫根 HCO₃⁻ 形式溶於血漿(占約 70%)","以 CO 形式"],a:"C",c:"ANIM",src:"orig",e:"組織產生的 CO₂ 大部分進入紅血球,經碳酸酐酶 CO₂+H₂O → H₂CO₃ → H⁺+HCO₃⁻;HCO₃⁻ 經 Cl⁻/HCO₃⁻ 交換器送出 RBC 進入血漿(70%)。少量直接溶解(7%)或與血紅素胺基結合(23%)。"},
+{y:0,n:1706,q:"[原創·ANIM] 男性減數分裂在何處進行?",o:["睪丸的支持細胞(Sertoli cells)","睪丸的萊氏細胞(Leydig cells)","睪丸的精原細胞 → 初級/次級精母細胞 → 精子細胞,過程在曲細精管內","副睪管腔"],a:"C",c:"ANIM",src:"orig",e:"曲細精管(seminiferous tubule)內:精原細胞(2n)→ 有絲分裂 → 初級精母細胞(2n)→ 減數分裂I → 次級精母細胞(n)→ 減數分裂II → 精子細胞(n)→ 變形為精子。Sertoli 細胞支持並形成血睪屏障;Leydig 細胞分泌睪固酮。"},
+{y:0,n:1707,q:"[原創·ANIM] 肌肉收縮的鈣離子釋放來源為?",o:["細胞外液","粒線體","肌漿網(sarcoplasmic reticulum)","細胞核"],a:"C",c:"ANIM",src:"orig",e:"動作電位沿肌膜傳到 T 小管 → 觸發肌漿網釋放 Ca²⁺ → Ca²⁺ 結合肌鈣蛋白(troponin)→ 原肌凝蛋白(tropomyosin)移開 → 肌動蛋白與肌凝蛋白頭部結合形成橫橋 → ATP 水解滑動。"},
+{y:0,n:1708,q:"[原創·ANIM] 自主神經系統中,「交感神經」與「副交感神經」對心跳的作用為?",o:["兩者都加速心跳","兩者都減慢心跳","交感加速,副交感減慢","副交感加速,交感減慢"],a:"C",c:"ANIM",src:"orig",e:"交感(戰或逃):末梢釋放正腎上腺素,作用於心臟β1受體 → 心跳加速、收縮力增強。副交感(休息消化):迷走神經釋放乙醯膽鹼,作用於 M2 受體 → 心跳減慢。兩者拮抗維持自律平衡。"},
+
+/* ============= 章節重點補強題 · 免疫學 (IMM) ============= */
+{y:0,n:1801,q:"[原創·IMM] 先天性免疫(innate immunity)與後天性免疫(adaptive immunity)的最主要差別為?",o:["先天性對所有病原專一,後天性不專一","先天性反應快、無特異性、無記憶;後天性反應慢但具高度特異性與記憶","先天性只在嬰兒期作用","兩者完全相同"],a:"B",c:"IMM",src:"orig",e:"先天性:皮膚、補體、巨噬、嗜中性、NK細胞、發炎反應 → 數小時內反應,辨識 PAMPs(透過 TLR 等)。後天性:T、B 細胞 → 數日後啟動,具抗原特異性、記憶細胞使二次反應更快更強(疫苗的原理)。"},
+{y:0,n:1802,q:"[原創·IMM] B 細胞與 T 細胞的成熟場所分別為?",o:["B 在胸腺,T 在骨髓","B 在骨髓,T 在胸腺","兩者都在胸腺","兩者都在淋巴結"],a:"B",c:"IMM",src:"orig",e:"B 細胞(Bone marrow)在骨髓成熟;T 細胞(Thymus)前驅細胞遷至胸腺成熟,經正向選擇(能識別 MHC)+負向選擇(不攻擊自體)。成熟後遷至周邊淋巴組織。"},
+{y:0,n:1803,q:"[原創·IMM] MHC class I 與 MHC class II 的主要差別為?",o:["MHC I 出現在所有有核細胞,呈現內生性抗原給 CD8⁺ T;MHC II 出現在抗原呈現細胞,呈現外源性抗原給 CD4⁺ T","MHC I 只在 B 細胞,MHC II 只在 T 細胞","兩者完全相同","MHC I 是抗體,MHC II 是補體"],a:"A",c:"IMM",src:"orig",e:"MHC I:所有有核細胞,呈現細胞內合成的抗原(病毒、癌)給 CD8⁺ 胞殺T;MHC II:專業 APC(樹突、巨噬、B)經吞噬胞內的外源抗原碎片,呈現給 CD4⁺ 輔助T。"},
+{y:0,n:1804,q:"[原創·IMM] 抗體(免疫球蛋白)分子的基本結構為?",o:["1 個重鏈 + 1 個輕鏈","2 個重鏈 + 2 個輕鏈,以雙硫鍵連接,呈 Y 形","1 個重鏈 + 2 個輕鏈","只有一條多肽鏈"],a:"B",c:"IMM",src:"orig",e:"基本免疫球蛋白單體:2 條相同重鏈 + 2 條相同輕鏈,雙硫鍵連結成 Y 形。Y 上方兩臂尖端為抗原結合區(Fab,可變區);Y 柄為效應功能區(Fc,結合補體或免疫細胞受體)。"},
+{y:0,n:1805,q:"[原創·IMM] 五類抗體中,在初次免疫反應(primary response)中最早大量產生的是?",o:["IgG","IgM","IgA","IgE"],a:"B",c:"IMM",src:"orig",e:"初次反應:B細胞先分泌 IgM(五聚體,中和效率高)→ 再經類型轉換(class switching)為 IgG(主要長效抗體,可通過胎盤)、IgA(分泌型,黏膜)、IgE(過敏、抗寄生蟲)。記憶反應主要為 IgG。"},
+{y:0,n:1806,q:"[原創·IMM] 補體系統的最終效應「攻膜複合體(MAC)」由哪些補體蛋白組成?",o:["C1、C2、C3","C5b、C6、C7、C8、C9","C3 與 C4","只有 C9"],a:"B",c:"IMM",src:"orig",e:"補體三條活化路徑(古典、凝集素、替代)最終都產生 C5 轉化酶 → C5b → 與 C6、C7、C8、(多個)C9 組成 MAC,在病原細胞膜上打洞造成滲透裂解。"},
+{y:0,n:1807,q:"[原創·IMM] 第一型過敏反應(immediate hypersensitivity)由哪一類抗體介導?",o:["IgG","IgM","IgA","IgE"],a:"D",c:"IMM",src:"orig",e:"第一型(立即型,如花粉過敏、過敏性休克):過敏原誘導產生 IgE,IgE 結合肥大細胞表面 FcεRI 受體;再次接觸時抗原交聯 IgE → 肥大細胞脫顆粒釋放組織胺 → 血管擴張、平滑肌收縮、黏液增加。"},
+{y:0,n:1808,q:"[原創·IMM] 主動免疫(active immunity)與被動免疫(passive immunity)的差別為?",o:["主動免疫=自己免疫系統製造抗體(感染或疫苗誘發,持久);被動免疫=直接接收他人抗體(母乳、抗血清,短期)","兩者完全相同","主動免疫只發生在男性","被動免疫只用於動物"],a:"A",c:"IMM",src:"orig",e:"主動:自己 B 細胞產抗體,有記憶細胞,效力長久(疫苗、自然感染)。被動:現成抗體輸入(母乳 IgA、胎盤 IgG、破傷風抗毒素血清),效力短(數週至數月),無記憶。"},
+
+/* ============= 章節重點補強題 · 生態學 (ECO) ============= */
+{y:0,n:1901,q:"[原創·ECO] 族群成長模型中,「邏輯成長(logistic growth)」與「指數成長(exponential growth)」的主要差別為?",o:["邏輯成長無上限,指數成長有上限","指數成長假設資源無限制,邏輯成長考慮環境負荷量(K)而呈 S 形","兩者完全相同","邏輯成長只用於植物"],a:"B",c:"ECO",src:"orig",e:"指數成長 dN/dt = rN(J 形,理論上無限);邏輯成長 dN/dt = rN(K-N)/K,考慮環境負荷量 K(食物、空間、天敵限制),呈 S 形。早期接近指數,接近 K 時成長趨緩,達 K 時 dN/dt=0。"},
+{y:0,n:1902,q:"[原創·ECO] 在生態系能量流動中,初級消費者(primary consumer)指的是?",o:["生產者","以生產者為食的草食動物","頂級掠食者","分解者"],a:"B",c:"ECO",src:"orig",e:"營養階:生產者(植物)→ 初級消費者(草食)→ 次級消費者(肉食)→ 三級消費者(頂級掠食)。每級之間能量轉換效率約 10%(10% rule),因此食物鏈通常 4-5 階。"},
+{y:0,n:1903,q:"[原創·ECO] 兩個物種利用相同資源時,根據「競爭排斥原理(competitive exclusion principle)」?",o:["兩物種能永久共存","其中一物種會被排擠或被迫分化生態棲位(niche partitioning)","兩物種會合併為一","與環境無關"],a:"B",c:"ECO",src:"orig",e:"Gause 原理:生態棲位完全相同的兩物種無法長期共存。實際上常觀察到棲位分化(temporal/spatial/diet partitioning,如達爾文雀分化喙形利用不同種子),這也是物種共存的關鍵機制。"},
+{y:0,n:1904,q:"[原創·ECO] 「關鍵物種(keystone species)」的定義為?",o:["族群數量最多的物種","體型最大的物種","對群落結構與多樣性影響遠超過其相對生物量的物種","最早演化出來的物種"],a:"C",c:"ECO",src:"orig",e:"經典案例:海星 Pisaster 移除後,殼斗動物物種數從 15 降至 8(被優勢競爭者排擠)。關鍵物種重要性遠超過其生物量比例。基礎物種(foundation species)則因生物量高而塑造群落(如珊瑚、紅樹林)。"},
+{y:0,n:1905,q:"[原創·ECO] 全球氮循環中,固氮作用(nitrogen fixation)是指?",o:["將 N₂ 轉換為氨/銨(NH₃/NH₄⁺)的過程,主要由固氮細菌與藍綠菌進行","將氨氧化為硝酸鹽","將硝酸鹽還原為氮氣","氮氣的物理擴散"],a:"A",c:"ECO",src:"orig",e:"氮循環:N₂ →[固氮]→ NH₄⁺ →[硝化]→ NO₂⁻ → NO₃⁻(植物吸收用);NO₃⁻ →[脫氮]→ N₂(回大氣)。生物固氮:固氮菌(自由生活)、根瘤菌(豆科共生)、藍綠菌、放線菌。工業固氮(Haber-Bosch)是農業氮肥來源。"},
+{y:0,n:1906,q:"[原創·ECO] 生物放大作用(biomagnification)是指?",o:["生物個體變大","脂溶性、不易代謝的污染物(如 DDT、汞)在食物鏈中逐階累積濃縮","生產者數量放大","物種數量放大"],a:"B",c:"ECO",src:"orig",e:"DDT、PCB、有機汞等脂溶性難分解物質,在每一營養階層由於能量耗損但污染物保留,濃度逐級升高。頂級掠食者(老鷹、鯊魚、北極熊)受害最重(DDT 使老鷹蛋殼變薄;汞中毒)。"},
+{y:0,n:1907,q:"[原創·ECO] 全球暖化的主要溫室氣體 CO₂ 來源為?",o:["火山噴發","化石燃料(煤、石油、天然氣)燃燒+森林砍伐","海洋蒸發","農業氮肥"],a:"B",c:"ECO",src:"orig",e:"工業革命以來大氣 CO₂ 從 280 ppm 升至超過 420 ppm。主因:化石燃料燃燒(交通、發電、工業)+森林砍伐(失去碳匯)。CH₄(畜牧、垃圾)、N₂O(農業)雖濃度低但溫室效應更強。"},
+{y:0,n:1908,q:"[原創·ECO] 生物多樣性(biodiversity)包含哪三個層次?",o:["微生物、植物、動物","遺傳多樣性、物種多樣性、生態系多樣性","熱帶、溫帶、寒帶","海洋、陸地、淡水"],a:"B",c:"ECO",src:"orig",e:"三層次:遺傳多樣性(同一物種內基因變異)、物種多樣性(地區內物種豐富度與均勻度)、生態系多樣性(森林、濕地、珊瑚礁等不同生態系)。保育需在三層次同時著手。"},
+
+];
+
+// 暴露給 app
+if (typeof window !== 'undefined') window.QUESTIONS = QUESTIONS;
+
+</script>
+<script>
+/* ============================================================
+ * 後中醫生物學練習器 — 應用邏輯
+ * Author: Custom build for CMU post-baccalaureate TCM bio practice
+ * Storage: localStorage (key prefix: bio_)
+ * ============================================================ */
+
+// ----- Campbell 章節定義 -----
+const CHAPTERS = [
+  { id: 'CHEM',  name: '化學基礎',     full: 'Ch 2–5 · The Chemistry of Life',                desc: '水、原子、分子、生物大分子' },
+  { id: 'CELL',  name: '細胞學',       full: 'Ch 6–7, 11–12 · Cell Structure & Communication', desc: '胞器、膜運輸、訊息傳遞、細胞週期' },
+  { id: 'METAB', name: '能量與代謝',   full: 'Ch 8–10 · Metabolism, Respiration, Photosynthesis', desc: '酵素、呼吸作用、光合作用' },
+  { id: 'GEN',   name: '遺傳學',       full: 'Ch 13–21 · Genetics & Molecular Biology',        desc: '減數分裂、孟德爾、DNA、基因表現、分生工具' },
+  { id: 'EVO',   name: '演化',         full: 'Ch 22–25 · Mechanisms of Evolution',             desc: '天擇、族群遺傳、種化、生命史' },
+  { id: 'DIV',   name: '生物多樣性',   full: 'Ch 26–34 · Diversity of Life',                   desc: '原核、原生、真菌、植物與動物多樣性' },
+  { id: 'PLANT', name: '植物學',       full: 'Ch 35–39 · Plant Form & Function',               desc: '組織、運輸、繁殖、激素、向性' },
+  { id: 'ANIM',  name: '動物生理',     full: 'Ch 40–49 · Animal Form & Function',              desc: '循環、呼吸、消化、神經、內分泌、生殖、免疫' },
+  { id: 'IMM',   name: '免疫學',       full: 'Ch 43 · Immune System',                          desc: '先天/後天免疫、抗體、T/B 細胞、補體' },
+  { id: 'ECO',   name: '生態學',       full: 'Ch 51–56 · Ecology',                             desc: '行為、族群、群落、生態系、保育' },
+];
+
+// ----- 自動章節分類關鍵字 -----
+const CHAP_KEYWORDS = {
+  CHEM: ['碳水化合物', '蛋白質結構', '胺基酸', '脂肪酸代謝', '核酸結構', 'pH', '緩衝', '官能基', '化學鍵'],
+  CELL: ['G蛋白', 'G 蛋白', '受體', '訊息傳遞', '細胞膜', '膜運輸', '細胞週期', '有絲分裂', '減數分裂', '溶酶體', '溶體', '高基氏', '高爾基', '內質網', '粒線體', '葉綠體', '細胞凋亡', '細胞骨', '微管', '微絲', '中心體', '紡錘', '核仁', '核膜', '滲透', '主動運輸', '促進擴散', '胞飲', '胞吞', '胞吐', '幫浦', '通道', '訊息分子'],
+  METAB: ['光合作用', '光系統', '葉綠素', '卡爾文', '克氏循環', '檸檬酸循環', '糖解', '電子傳遞', '呼吸作用', '氧化磷酸化', 'ATP合成', 'NADH', 'NADPH', 'FADH', '光反應', '碳反應', '光呼吸', 'Calvin', 'C4 植物', 'CAM 植物', '酵素', 'Km', 'Vmax', '抑制劑', '糖質新生', 'gluconeogenesis', '酮體', '脂肪酸氧化'],
+  GEN: ['DNA', 'RNA', '基因表現', '轉錄', '轉譯', '剪接', 'mRNA', 'tRNA', 'rRNA', '聚合酶', '突變', '遺傳', '對偶基因', '基因型', '表現型', '減數分裂', '染色體', '互換', '連鎖', '重組', '孟德爾', '哈溫', 'Hardy', '譜系', '帶因者', '隱性', '顯性', 'X染色體', 'Y染色體', '遺傳病', 'CRISPR', 'siRNA', 'miRNA', '質體', 'plasmid', '限制酶', '聚合酶連鎖', 'PCR', '墨點', 'blot', '基因剔除', 'knockout', '基因編輯', '操縱組', 'operon', 'lac', 'trp', '啟動子', '增強子', '內含子', '外顯子', '岡崎', '端粒', '組蛋白', '核小體', '基因座', '單核苷酸多型性', 'SNP', '基因標記', '基因密度', '巴爾氏', '唐氏', '克萊恩', '透納', '苯丙酮尿症', '血友病', '色盲', '鐮刀', 'sickle', '父親', '母親', '子代', '基因組', 'genome', '同源異型', 'Hox'],
+  EVO: ['演化', '天擇', '族群遺傳', '種化', '基因漂變', '異域', '同域', '生殖隔離', '達爾文', '適應', '化石', '地質', '寒武', '泥盆', '三疊', '侏羅', '滅絕', '親緣關係樹', '系統發生', '分子時鐘', '直系', '旁系', '同源', 'orthologous', 'paralogous', '收斂演化', '趨同', '退化構造', 'vestigial', 'Hardy-Weinberg', '哈溫', '對偶基因頻度', '對偶基因頻率', '先驅者', 'founder', '瓶頸'],
+  DIV: ['原核', '古細菌', '真細菌', '革蘭氏', '芽孢', '孢子', '病毒', '噬菌體', '反轉錄', 'HIV', '冠狀', '流感', '疱疹', '小兒麻痺', '腺病毒', '痘病毒', '原生動物', '真菌', '菌絲', '地衣', '菌根', '苔蘚', '蕨類', '裸子', '被子', '雙子葉', '單子葉', '海綿', '刺胞', '扁形', '線蟲', '環節', '節肢', '軟體', '棘皮', '脊索', '兩生', '爬蟲', '鳥類', '哺乳', '原口', '後口', '輻射對稱', '兩側對稱', '體腔'],
+  PLANT: ['花', '雌蕊', '雄蕊', '花瓣', '花萼', '心皮', '胚珠', '花粉', '授粉', '受精', '種子', '果實', '萌芽', '幼苗', '生長素', 'auxin', '吉貝素', '細胞分裂素', '離層', '乙烯', '光敏素', 'phytochrome', '光週期', '臨界夜', '短日照', '長日照', '蒸散', '氣孔', '保衛細胞', '木質部', '韌皮部', '導管', '管胞', '篩管', '伴細胞', '根毛', '皮層', '中柱', '凱氏', '根壓', '水勢', '蒸散流', '營養繁殖', '世代交替', '配子體', '孢子體', '雙受精'],
+  ANIM: ['心臟', '心房', '心室', '血壓', '血液', '血紅', '血漿', '紅血球', '白血球', '血小板', '微血管', '動脈', '靜脈', '心輸出', '腎臟', '腎絲球', '腎元', '近曲', '遠曲', '亨耳', '集尿管', '腎上腺', '尿液', '醛固酮', '抗利尿', 'ADH', '肝臟', '消化', '胃', '小腸', '大腸', '胰', '膽', '吸收', '神經元', '突觸', '動作電位', '膜電位', '離子通道', '神經傳導', '乙醯膽鹼', '腎上腺素', '正腎上腺素', '多巴胺', '血清素', '麩胺酸', 'GABA', '中樞神經', '周邊神經', '大腦', '小腦', '下視丘', '海馬', '杏仁核', '視丘', '基底核', '脊髓', '感覺', '視覺', '聽覺', '味覺', '嗅覺', '視網膜', '錐細胞', '桿細胞', '光敏', '聽小骨', '耳蝸', '半規管', '前庭', '激素', '荷爾蒙', '內分泌', '腦垂腺', '甲狀腺', '副甲狀腺', '胰島素', '昇糖素', '糖尿病', '胰島', '胰高血糖', '生長激素', '泌乳', '催產素', '性激素', '雌激素', '黃體', '動情', '睪固酮', '月經', '排卵', '受孕', '懷孕', '胎盤', '臍帶', '羊膜', '胎兒', '骨骼肌', '肌肉收縮', '肌動蛋白', '肌凝蛋白', '肌絲', '橫橋', '肌漿網', '橫管', '運動神經', '神經肌肉', '骨骼', '關節', '韌帶', '呼吸', '肺', '肺泡', '氣管', '支氣管', '橫膈', '氧分壓', '血紅素', '波爾', '一氧化碳', '一氧化氮', '溫度調節', '滲透調節', '體溫', '生殖系統', '精子', '卵子', '配子', '胚胎', '發育', '原腸胚', '神經胚', '胚層', '胚層分化', '幹細胞', '誘導', '成體幹細胞', '胚幹細胞', 'iPS'],
+  IMM: ['免疫', '抗體', '抗原', '巨噬細胞', '樹突', '淋巴球', 'B 細胞', 'B細胞', 'T 細胞', 'T細胞', '輔助', 'Th1', 'Th2', 'Treg', '胞殺', '毒殺', '記憶細胞', '補體', 'MHC', '主要組織相容', '干擾素', '介白素', '組織胺', '肥大細胞', '嗜中性', '嗜酸性', '嗜鹼性', 'IgG', 'IgM', 'IgA', 'IgE', 'IgD', '發炎反應', '過敏', '疫苗', '先天性免疫', '後天性免疫', '自體免疫', 'TLR', '類鐸', 'NK 細胞', '自然殺手'],
+  ECO: ['生態系', '生物多樣性', '族群', '群落', '群聚', '生產力', '初級生產', '碳循環', '氮循環', '磷循環', '食物鏈', '食物網', '營養階', '掠食', '寄生', '共生', '互利', '片利', '競爭', '生態地景', '棲地', '生物地理', '氣候', '熱帶', '溫帶', '寒帶', '雨林', '濕地', '紅樹林', '珊瑚礁', '河口', '海洋', '海岸', '聖嬰', '溫室效應', '全球暖化', '酸雨', '污染', '保育', '瀕危', '滅絕', '生物量', '行為', '本能', '學習', '印痕', '習慣化', '古典制約', '操作制約', '利他', '社會行為', '生育策略', '生存曲線', '族群成長', '邏輯成長', 'r 選擇', 'K 選擇', '碳排', '酸化', '優養化', '入侵種', '關鍵物種', '基礎物種']
+};
+
+// 預設章節分類（自動）— 真正的對應在 questions data 內已標好；若沒標，依關鍵字猜
+function autoChapter(q) {
+  const text = q.q + ' ' + q.o.join(' ');
+  for (const cid of ['IMM','METAB','GEN','EVO','PLANT','ANIM','CELL','DIV','ECO','CHEM']) {
+    const kw = CHAP_KEYWORDS[cid];
+    for (const k of kw) {
+      if (text.includes(k)) return cid;
+    }
+  }
+  return 'GEN';
+}
+
+// ----- Storage helpers -----
+const STORE = {
+  get(k, def) {
+    try { const v = localStorage.getItem('bio_' + k); return v ? JSON.parse(v) : def; }
+    catch (e) { return def; }
+  },
+  set(k, v) {
+    try { localStorage.setItem('bio_' + k, JSON.stringify(v)); } catch (e) {}
+  },
+  remove(k) { localStorage.removeItem('bio_' + k); }
+};
+
+// ----- App state -----
+const APP = {
+  questions: [],            // 全部題目
+  byChapter: {},            // chapter -> 題目陣列
+  byYear: {},               // year -> 題目陣列
+  history: STORE.get('history', {}),     // qid -> {answers:[{a,correct,t}], correct:bool}
+  notes: STORE.get('notes', []),         // [{id,title,body,chap,linkedQid,t}]
+  mockHistory: STORE.get('mockHistory', []), // [{date,score,answered,correct,wrong,duration,detail}]
+  curMode: null,
+  curList: [],
+  curIdx: 0,
+};
+
+function qid(q) {
+  // 原創題 y=0,以 'orig-' 前綴避免與考古題撞 ID
+  return q.y > 0 ? (q.y + '-' + q.n) : ('orig-' + q.n);
+}
+
+// ----- 初始化資料 -----
+function initData() {
+  // QUESTIONS 由 biology_data.js 注入
+  APP.questions = (typeof QUESTIONS !== 'undefined') ? QUESTIONS : [];
+  APP.questions.forEach(q => {
+    if (!q.c) q.c = autoChapter(q);
+    if (!APP.byChapter[q.c]) APP.byChapter[q.c] = [];
+    APP.byChapter[q.c].push(q);
+    if (!APP.byYear[q.y]) APP.byYear[q.y] = [];
+    APP.byYear[q.y].push(q);
+  });
+
+  // 初始化年度 selector
+  const years = Object.keys(APP.byYear).sort();
+  ['practiceYear', 'mockYear'].forEach(id => {
+    const sel = document.getElementById(id);
+    years.forEach(y => {
+      const o = document.createElement('option');
+      o.value = y; o.textContent = y + ' 學年度';
+      sel.appendChild(o);
+    });
+  });
+
+  // 章節列表
+  const chapList = document.getElementById('chapterList');
+  chapList.innerHTML = '';
+  CHAPTERS.forEach(ch => {
+    const all = APP.byChapter[ch.id] || [];
+    const examCount = all.filter(q => q.src !== 'orig').length;
+    const origCount = all.filter(q => q.src === 'orig').length;
+    if (all.length === 0) return;
+    const btn = document.createElement('button');
+    btn.className = 'mode-btn';
+    btn.dataset.chap = ch.id;
+    btn.innerHTML = `<div class="ttl">${ch.name}
+        <span style="font-size:12px;color:var(--ink-soft);font-weight:400;margin-left:6px;">
+          考古 ${examCount}${origCount?` · <span style="color:var(--gold);">原創補強 ${origCount}</span>`:''}
+        </span>
+      </div>
+      <div class="desc">${ch.full}<br>${ch.desc}</div>`;
+    btn.onclick = () => startChapterPractice(ch.id);
+    chapList.appendChild(btn);
+  });
+
+  // notes chapter selector
+  const noteChap = document.getElementById('noteChap');
+  noteChap.innerHTML = '<option value="">未分類</option>';
+  CHAPTERS.forEach(ch => {
+    const o = document.createElement('option');
+    o.value = ch.id; o.textContent = ch.name;
+    noteChap.appendChild(o);
+  });
+
+  refreshHeader();
+  refreshHomeStats();
+  refreshWrongBadge();
+}
+
+// ===== Helpers =====
+function shuffle(a) {
+  const arr = [...a];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function chapterName(id) {
+  const c = CHAPTERS.find(x => x.id === id);
+  return c ? c.name : id;
+}
+
+// ===== Header / Home stats =====
+function refreshHeader() {
+  const total = APP.questions.length;
+  const done = Object.keys(APP.history).length;
+  const correct = Object.values(APP.history).filter(h => h.correct).length;
+  const acc = done ? Math.round(correct / done * 100) : 0;
+  document.getElementById('headerStats').innerHTML = `
+    <div><b>${done}/${total}</b>已作答</div>
+    <div><b>${acc}%</b>正確率</div>
+    <div><b>${APP.notes.length}</b>篇筆記</div>
+  `;
+}
+
+function refreshHomeStats() {
+  const total = APP.questions.length;
+  const done = Object.keys(APP.history).length;
+  const correct = Object.values(APP.history).filter(h => h.correct).length;
+  const wrong = done - correct;
+  const acc = done ? Math.round(correct / done * 100) : 0;
+  const today = new Date().toDateString();
+  const todayDone = Object.values(APP.history).filter(h => h.lastT && new Date(h.lastT).toDateString() === today).length;
+
+  document.getElementById('homeStats').innerHTML = `
+    <div class="stat-tile"><div class="num">${total}</div><div class="lbl">題庫總題數</div></div>
+    <div class="stat-tile"><div class="num">${done}</div><div class="lbl">已作答題數</div></div>
+    <div class="stat-tile"><div class="num">${acc}%</div><div class="lbl">總正確率</div></div>
+    <div class="stat-tile"><div class="num">${wrong}</div><div class="lbl">錯題待複習</div></div>
+    <div class="stat-tile"><div class="num">${todayDone}</div><div class="lbl">今日已做</div></div>
+    <div class="stat-tile"><div class="num">${APP.mockHistory.length}</div><div class="lbl">模擬考次數</div></div>
+  `;
+}
+
+function refreshWrongBadge() {
+  const wrong = Object.values(APP.history).filter(h => !h.correct).length;
+  const badge = document.getElementById('wrongBadge');
+  if (wrong > 0) {
+    badge.style.display = 'inline-block';
+    badge.textContent = wrong;
+  } else {
+    badge.style.display = 'none';
+  }
+}
+
+// ===== Tab switching =====
+document.getElementById('tabs').addEventListener('click', e => {
+  if (e.target.tagName === 'BUTTON') {
+    const t = e.target.dataset.tab;
+    switchTab(t);
+  }
+});
+document.querySelectorAll('[data-go]').forEach(el => {
+  el.addEventListener('click', () => switchTab(el.dataset.go));
+});
+function switchTab(t) {
+  document.querySelectorAll('nav.tabs button').forEach(b => b.classList.toggle('active', b.dataset.tab === t));
+  document.querySelectorAll('.panel').forEach(p => p.classList.toggle('active', p.id === 'panel-' + t));
+  if (t === 'wrong') renderWrong();
+  if (t === 'notes') renderNotes();
+  if (t === 'report') renderReport();
+  if (t === 'home') { refreshHomeStats(); refreshHeader(); }
+  window.scrollTo(0, 0);
+}
+
+// ===== Render single question card =====
+function renderQuestion(q, opts = {}) {
+  // opts: { showAnswer, onAnswer, prefill, disableSelect }
+  const wrap = document.createElement('div');
+  wrap.className = 'qcard';
+  const id = qid(q);
+  const hist = APP.history[id];
+  const noteCount = APP.notes.filter(n => n.linkedQid === id).length;
+  const isOrig = q.src === 'orig';
+
+  const optsHTML = q.o.map((opt, i) => {
+    const letter = String.fromCharCode(65 + i);
+    return `<div class="opt" data-letter="${letter}"><span class="lbl">${letter}</span><span class="txt">${escapeHTML(opt)}</span></div>`;
+  }).join('');
+
+  // 自動去除題幹中的 [原創·XXX] 前綴(避免重複顯示,因為已經有 tag)
+  const cleanQ = (q.q || '').replace(/^\s*\[原創[·•・・]\s*\w+\]\s*/, '');
+
+  // 來源標籤(考古/原創)
+  const srcTag = isOrig
+    ? `<span class="tag" style="background:var(--gold);">章節重點</span>`
+    : `<span class="tag" style="background:var(--cinnabar);">考古題</span>`;
+  // 年度顯示(原創題 y=0 時不顯示年度)
+  const yearTag = q.y > 0
+    ? `<span class="tag year">${q.y} 學年</span>`
+    : `<span class="tag year" style="background:var(--jade-deep);">補強題</span>`;
+
+  wrap.innerHTML = `
+    <div class="qmeta">
+      <div>
+        ${yearTag}
+        ${srcTag}
+        <span class="tag chap">${chapterName(q.c)}</span>
+        <span style="color:var(--ink-soft);">第 ${q.n} 題</span>
+        ${hist ? `<span style="color:${hist.correct?'var(--jade-deep)':'var(--cinnabar-deep)'};margin-left:8px;">${hist.correct?'✓ 曾答對':'✗ 曾答錯'}</span>` : ''}
+      </div>
+      <div>
+        <button class="ghost" data-act="note" style="padding:4px 12px;font-size:12px;">記筆記${noteCount?` (${noteCount})`:''}</button>
+      </div>
+    </div>
+    <div class="qstem">${escapeHTML(cleanQ)}</div>
+    <div class="options">${optsHTML}</div>
+    <div class="qfoot"></div>
+    <div class="explain hidden"></div>
+  `;
+
+  const optEls = wrap.querySelectorAll('.opt');
+  const explain = wrap.querySelector('.explain');
+  let answered = false;
+
+  function selectAnswer(letter) {
+    if (answered && !opts.allowChange) return;
+    const correct = letter === q.a;
+    optEls.forEach(o => o.classList.remove('selected'));
+    const sel = wrap.querySelector(`.opt[data-letter="${letter}"]`);
+    if (sel) sel.classList.add('selected');
+
+    if (opts.showAnswer !== false) {
+      answered = true;
+      optEls.forEach(o => {
+        o.classList.add('disabled');
+        const l = o.dataset.letter;
+        if (l === q.a) o.classList.add('correct');
+        if (l === letter && !correct) o.classList.add('wrong');
+      });
+      explain.classList.remove('hidden');
+      explain.innerHTML = `
+        <div class="answer-line">${correct ? '✓ 答對！' : '✗ 答錯了'} 正確答案：<b>${q.a}</b></div>
+        <div><b>所屬範疇：</b>${chapterName(q.c)} · ${q.y} 學年第 ${q.n} 題</div>
+        ${q.e ? `<div style="margin-top:6px;"><b>解析：</b>${escapeHTML(q.e)}</div>` : `<div style="margin-top:6px; color:var(--ink-soft);font-size:13px;">提示：可點選「記筆記」記錄此題重點，建議自行翻閱 Campbell ${(CHAPTERS.find(c=>c.id===q.c)||{}).full || ''} 章節。</div>`}
+      `;
+      // 紀錄
+      if (!APP.history[id]) APP.history[id] = { answers: [], correct: false };
+      APP.history[id].answers.push({ a: letter, c: correct, t: Date.now() });
+      APP.history[id].correct = correct;
+      APP.history[id].lastA = letter;
+      APP.history[id].lastT = Date.now();
+      APP.history[id].chap = q.c;
+      APP.history[id].year = q.y;
+      STORE.set('history', APP.history);
+      refreshHeader();
+      refreshWrongBadge();
+    }
+    if (opts.onAnswer) opts.onAnswer(letter, correct);
+  }
+
+  optEls.forEach(o => {
+    o.addEventListener('click', () => selectAnswer(o.dataset.letter));
+  });
+  if (opts.prefill) {
+    const sel = wrap.querySelector(`.opt[data-letter="${opts.prefill}"]`);
+    if (sel) sel.classList.add('selected');
+    if (opts.disableSelect) {
+      optEls.forEach(o => {
+        o.classList.add('disabled');
+        const l = o.dataset.letter;
+        if (l === q.a) o.classList.add('correct');
+        if (l === opts.prefill && opts.prefill !== q.a) o.classList.add('wrong');
+      });
+    }
+  }
+  if (opts.showAnswerImmediately) {
+    explain.classList.remove('hidden');
+    explain.innerHTML = `
+      <div class="answer-line">正確答案：<b>${q.a}</b></div>
+      <div><b>所屬範疇：</b>${chapterName(q.c)}</div>
+    `;
+  }
+
+  // Note button
+  wrap.querySelector('[data-act="note"]').addEventListener('click', () => {
+    document.getElementById('noteTitle').value = `[${q.y}-${q.n}] `;
+    document.getElementById('noteBody').value = q.q + '\n\n正確答案：' + q.a + '\n';
+    document.getElementById('noteChap').value = q.c;
+    document.getElementById('noteEditingHint').textContent = '已連結至此題';
+    document.getElementById('noteEditingHint').dataset.linkedQid = id;
+    switchTab('notes');
+  });
+
+  return { el: wrap, selectAnswer, getAnswered: () => answered };
+}
+
+function escapeHTML(s) {
+  if (typeof s !== 'string') return '';
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ===== PRACTICE MODE =====
+document.getElementById('practiceStart').addEventListener('click', () => {
+  const n = parseInt(document.getElementById('practiceCount').value);
+  const year = document.getElementById('practiceYear').value;
+  const src = document.getElementById('practiceSource').value;
+  const type = document.getElementById('practiceType').value;
+  let pool = year === 'all' ? [...APP.questions] : (APP.byYear[year] || []).slice();
+  if (src !== 'all') {
+    if (src === '考古') pool = pool.filter(q => q.src !== 'orig');
+    else if (src === '原創') pool = pool.filter(q => q.src === 'orig');
+  }
+  if (type === 'unseen') {
+    const unseen = pool.filter(q => !APP.history[qid(q)]);
+    pool = unseen.length >= n ? unseen : unseen.concat(shuffle(pool.filter(q => APP.history[qid(q)])).slice(0, n - unseen.length));
+  } else if (type === 'mistakes') {
+    const wrong = pool.filter(q => APP.history[qid(q)] && !APP.history[qid(q)].correct);
+    pool = wrong.length >= n ? wrong : wrong.concat(shuffle(pool.filter(q => !wrong.includes(q))).slice(0, n - wrong.length));
+  }
+  const list = shuffle(pool).slice(0, n);
+  if (list.length === 0) { alert('題庫無符合條件的題目'); return; }
+  startQuestionFlow('practiceArea', list);
+});
+
+function startQuestionFlow(containerId, list) {
+  const c = document.getElementById(containerId);
+  c.innerHTML = '';
+  let idx = 0;
+  let stats = { done: 0, correct: 0 };
+
+  function render() {
+    c.innerHTML = '';
+    const top = document.createElement('div');
+    top.className = 'card';
+    top.innerHTML = `<h2>第 ${idx+1} / ${list.length} 題</h2>
+      <div class="progress-bar"><span style="width:${(idx)/list.length*100}%"></span></div>
+      <div class="small">已作答：${stats.done} · 答對：${stats.correct} · 正確率：${stats.done?Math.round(stats.correct/stats.done*100):0}%</div>`;
+    c.appendChild(top);
+
+    const q = list[idx];
+    const r = renderQuestion(q, {
+      onAnswer: (letter, correct) => {
+        stats.done++;
+        if (correct) stats.correct++;
+        // update progress display
+        top.querySelector('.small').textContent = `已作答：${stats.done} · 答對：${stats.correct} · 正確率：${Math.round(stats.correct/stats.done*100)}%`;
+        const foot = r.el.querySelector('.qfoot');
+        foot.innerHTML = '';
+        const next = document.createElement('button');
+        next.className = 'primary';
+        next.textContent = idx+1 < list.length ? '下一題 →' : '完成練習';
+        next.addEventListener('click', () => {
+          if (idx+1 < list.length) { idx++; render(); }
+          else {
+            c.innerHTML = `<div class="card"><h2>練習完成</h2>
+              <div class="stat-grid">
+                <div class="stat-tile"><div class="num">${list.length}</div><div class="lbl">題目數</div></div>
+                <div class="stat-tile"><div class="num">${stats.correct}</div><div class="lbl">答對</div></div>
+                <div class="stat-tile"><div class="num">${list.length - stats.correct}</div><div class="lbl">答錯</div></div>
+                <div class="stat-tile"><div class="num">${Math.round(stats.correct/list.length*100)}%</div><div class="lbl">正確率</div></div>
+              </div>
+              <div style="display:flex;gap:10px;margin-top:16px;">
+                <button class="primary" id="practiceAgain">再來一輪</button>
+                <button class="ghost" id="practiceBack">回首頁</button>
+              </div></div>`;
+            document.getElementById('practiceAgain').onclick = () => document.getElementById('practiceStart').click();
+            document.getElementById('practiceBack').onclick = () => switchTab('home');
+            refreshHomeStats();
+          }
+        });
+        foot.appendChild(next);
+      }
+    });
+    c.appendChild(r.el);
+    window.scrollTo(0, 0);
+  }
+  render();
+}
+
+// ===== CHAPTER MODE =====
+function startChapterPractice(chapId) {
+  const list = shuffle(APP.byChapter[chapId] || []);
+  if (list.length === 0) { alert('此章節尚無題目'); return; }
+  startQuestionFlow('chapterArea', list.slice(0, Math.min(list.length, 30)));
+  document.getElementById('chapterArea').scrollIntoView({behavior:'smooth'});
+}
+
+// ===== MOCK EXAM =====
+let mockState = null;
+
+document.getElementById('mockStart').addEventListener('click', () => {
+  const yearSel = document.getElementById('mockYear').value;
+  let pool = yearSel === 'all' ? [...APP.questions] : (APP.byYear[yearSel] || []).slice();
+  if (pool.length < 50) { alert('題庫不足 50 題'); return; }
+  const list = shuffle(pool).slice(0, 50);
+
+  mockState = {
+    list, answers: new Array(50).fill(null), flagged: new Set(),
+    startTime: Date.now(), duration: 80 * 60 * 1000, // 80 mins
+    cur: 0, finished: false, timer: null
+  };
+
+  document.getElementById('mockSetup').classList.add('hidden');
+  document.getElementById('mockArea').classList.remove('hidden');
+  renderMock();
+  mockState.timer = setInterval(updateMockTimer, 1000);
+  updateMockTimer();
+});
+
+function renderMock() {
+  const area = document.getElementById('mockArea');
+  area.innerHTML = `
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+        <h2 style="margin-bottom:0;">模擬考進行中</h2>
+        <div class="timer" id="mockTimer">80:00</div>
+      </div>
+      <div class="progress-bar"><span id="mockProgress" style="width:0%"></span></div>
+      <div class="small" id="mockStat"></div>
+      <div class="qnav" id="mockNav"></div>
+      <div style="margin-top:12px;">
+        <button class="ghost" id="mockFlag">標記此題</button>
+        <button class="primary" id="mockSubmit" style="float:right;">交卷</button>
+      </div>
+    </div>
+    <div id="mockQArea"></div>
+  `;
+
+  document.getElementById('mockSubmit').onclick = () => {
+    if (confirm('確定交卷？')) finishMock();
+  };
+  document.getElementById('mockFlag').onclick = () => {
+    if (mockState.flagged.has(mockState.cur)) mockState.flagged.delete(mockState.cur);
+    else mockState.flagged.add(mockState.cur);
+    renderMockNav();
+  };
+
+  renderMockNav();
+  renderMockQ();
+}
+
+function renderMockNav() {
+  const nav = document.getElementById('mockNav');
+  nav.innerHTML = '';
+  for (let i = 0; i < mockState.list.length; i++) {
+    const b = document.createElement('button');
+    b.textContent = i + 1;
+    if (mockState.answers[i]) b.classList.add('answered');
+    if (mockState.flagged.has(i)) b.classList.add('flagged');
+    if (i === mockState.cur) b.classList.add('current');
+    b.addEventListener('click', () => { mockState.cur = i; renderMockQ(); renderMockNav(); });
+    nav.appendChild(b);
+  }
+  const ans = mockState.answers.filter(x => x).length;
+  document.getElementById('mockStat').textContent =
+    `已作答 ${ans} / ${mockState.list.length} · 標記 ${mockState.flagged.size} 題`;
+  document.getElementById('mockProgress').style.width = (ans / mockState.list.length * 100) + '%';
+}
+
+function renderMockQ() {
+  const area = document.getElementById('mockQArea');
+  area.innerHTML = '';
+  const q = mockState.list[mockState.cur];
+  const r = renderQuestion(q, {
+    showAnswer: false,
+    prefill: mockState.answers[mockState.cur] || null,
+    onAnswer: (letter) => {
+      mockState.answers[mockState.cur] = letter;
+      renderMockNav();
+    }
+  });
+
+  // 替換選項點擊行為（不顯示答案）
+  r.el.querySelectorAll('.opt').forEach(o => {
+    o.replaceWith(o.cloneNode(true));
+  });
+  r.el.querySelectorAll('.opt').forEach(o => {
+    o.addEventListener('click', () => {
+      mockState.answers[mockState.cur] = o.dataset.letter;
+      r.el.querySelectorAll('.opt').forEach(x => x.classList.remove('selected'));
+      o.classList.add('selected');
+      renderMockNav();
+    });
+  });
+
+  // 隱藏「記筆記」於模擬考
+  const noteBtn = r.el.querySelector('[data-act="note"]');
+  if (noteBtn) noteBtn.style.display = 'none';
+
+  // 上下題按鈕
+  const foot = r.el.querySelector('.qfoot');
+  foot.innerHTML = `
+    <button class="ghost" id="mockPrev" ${mockState.cur===0?'disabled':''}>← 上一題</button>
+    <button class="primary" id="mockNext">${mockState.cur===mockState.list.length-1?'最後一題':'下一題 →'}</button>
+  `;
+  document.getElementById('mockPrev').onclick = () => { if (mockState.cur>0){mockState.cur--; renderMockQ(); renderMockNav();}};
+  document.getElementById('mockNext').onclick = () => { if (mockState.cur<mockState.list.length-1){mockState.cur++; renderMockQ(); renderMockNav();} };
+  window.scrollTo(0, document.getElementById('mockQArea').offsetTop - 20);
+}
+
+function updateMockTimer() {
+  if (!mockState || mockState.finished) return;
+  const left = mockState.duration - (Date.now() - mockState.startTime);
+  if (left <= 0) { finishMock(true); return; }
+  const min = Math.floor(left / 60000);
+  const sec = Math.floor(left % 60000 / 1000);
+  const t = document.getElementById('mockTimer');
+  if (t) {
+    t.textContent = `${String(min).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+    t.classList.toggle('warn', left < 10 * 60000);
+  }
+}
+
+function finishMock(timeup = false) {
+  if (mockState.finished) return;
+  mockState.finished = true;
+  if (mockState.timer) clearInterval(mockState.timer);
+
+  let correct = 0, wrong = 0, blank = 0;
+  const detail = [];
+  const chapStats = {};
+
+  mockState.list.forEach((q, i) => {
+    const a = mockState.answers[i];
+    const c = q.c;
+    if (!chapStats[c]) chapStats[c] = { total: 0, correct: 0 };
+    chapStats[c].total++;
+    let isCorrect = false;
+    if (!a) { blank++; }
+    else if (a === q.a) { correct++; isCorrect = true; chapStats[c].correct++; }
+    else { wrong++; }
+    detail.push({ i, q, ans: a, correct: isCorrect });
+    // 紀錄歷史
+    if (a) {
+      const id = qid(q);
+      if (!APP.history[id]) APP.history[id] = { answers: [], correct: false };
+      APP.history[id].answers.push({ a, c: isCorrect, t: Date.now(), mock: true });
+      APP.history[id].correct = isCorrect;
+      APP.history[id].lastA = a;
+      APP.history[id].lastT = Date.now();
+      APP.history[id].chap = q.c;
+      APP.history[id].year = q.y;
+    }
+  });
+  STORE.set('history', APP.history);
+
+  const score = Math.max(0, correct * 2 - wrong * 0.7);
+  const rec = {
+    date: new Date().toISOString(),
+    score: score.toFixed(1),
+    answered: correct + wrong,
+    correct, wrong, blank,
+    duration: Math.round((Date.now() - mockState.startTime) / 1000),
+    chapStats,
+    detail: detail.map(d => ({ qid: qid(d.q), ans: d.ans, correct: d.correct, c: d.q.c, y: d.q.y, n: d.q.n }))
+  };
+  APP.mockHistory.unshift(rec);
+  if (APP.mockHistory.length > 30) APP.mockHistory = APP.mockHistory.slice(0, 30);
+  STORE.set('mockHistory', APP.mockHistory);
+
+  // 顯示結果
+  const area = document.getElementById('mockArea');
+  let chapHTML = '';
+  Object.keys(chapStats).forEach(c => {
+    const s = chapStats[c];
+    const pct = s.total ? Math.round(s.correct/s.total*100) : 0;
+    chapHTML += `<div class="bar-row">
+      <div class="lbl">${chapterName(c)}</div>
+      <div class="bar"><span style="width:${pct}%;"></span></div>
+      <div class="num">${s.correct}/${s.total}</div>
+    </div>`;
+  });
+
+  area.innerHTML = `
+    <div class="card">
+      <h2>${timeup?'時間到，自動交卷':'交卷完成'}</h2>
+      <div class="stat-grid">
+        <div class="stat-tile"><div class="num" style="color:var(--cinnabar);">${score.toFixed(1)}</div><div class="lbl">總分（滿分 100）</div></div>
+        <div class="stat-tile"><div class="num">${correct}</div><div class="lbl">答對</div></div>
+        <div class="stat-tile"><div class="num">${wrong}</div><div class="lbl">答錯</div></div>
+        <div class="stat-tile"><div class="num">${blank}</div><div class="lbl">未作答</div></div>
+        <div class="stat-tile"><div class="num">${Math.round((Date.now()-mockState.startTime)/60000)}</div><div class="lbl">耗時（分）</div></div>
+      </div>
+      <h3>各章節答對率</h3>
+      ${chapHTML}
+      <div style="margin-top:18px; display:flex;gap:10px;">
+        <button class="primary" id="mockReview">逐題檢討</button>
+        <button class="ghost" id="mockNew">再考一次</button>
+      </div>
+    </div>
+    <div id="mockReviewArea"></div>
+  `;
+
+  document.getElementById('mockReview').onclick = () => renderMockReview(detail);
+  document.getElementById('mockNew').onclick = () => {
+    document.getElementById('mockSetup').classList.remove('hidden');
+    document.getElementById('mockArea').classList.add('hidden');
+    mockState = null;
+  };
+  refreshHeader();
+  refreshWrongBadge();
+}
+
+function renderMockReview(detail) {
+  const area = document.getElementById('mockReviewArea');
+  area.innerHTML = '<div class="card"><h2>逐題檢討</h2><div id="mockReviewList"></div></div>';
+  const list = document.getElementById('mockReviewList');
+  detail.forEach((d, i) => {
+    const wrap = document.createElement('div');
+    wrap.style.marginBottom = '20px';
+    const r = renderQuestion(d.q, {
+      prefill: d.ans, disableSelect: true
+    });
+    // 不重新紀錄歷史
+    r.el.querySelectorAll('.opt').forEach(o => o.style.pointerEvents = 'none');
+    const head = document.createElement('div');
+    head.style.cssText = 'font-weight:700;margin-bottom:8px;color:'+(d.correct?'var(--jade-deep)':d.ans?'var(--cinnabar-deep)':'var(--ink-soft)');
+    head.textContent = `第 ${i+1} 題 — ${d.correct?'✓ 答對':d.ans?'✗ 答錯':'○ 未作答'}`;
+    wrap.appendChild(head);
+    wrap.appendChild(r.el);
+    list.appendChild(wrap);
+  });
+  area.scrollIntoView({behavior:'smooth'});
+}
+
+// ===== WRONG REVIEW =====
+function renderWrong() {
+  const filter = document.getElementById('wrongFilter');
+  const area = document.getElementById('wrongArea');
+  const wrongIds = Object.keys(APP.history).filter(id => !APP.history[id].correct);
+  const wrongQs = wrongIds.map(id => APP.questions.find(q => qid(q) === id)).filter(Boolean);
+
+  // build chapter filter
+  filter.innerHTML = '<label style="margin-right:8px;">章節：</label>';
+  const chips = document.createElement('div');
+  chips.className = 'filter-row';
+  chips.style.display = 'inline-flex';
+  const allChip = chip('全部', 'all', true);
+  chips.appendChild(allChip);
+  CHAPTERS.forEach(c => {
+    const cnt = wrongQs.filter(q => q.c === c.id).length;
+    if (cnt) chips.appendChild(chip(`${c.name} (${cnt})`, c.id));
+  });
+  filter.appendChild(chips);
+  let curFilter = 'all';
+  function chip(text, val, active) {
+    const e = document.createElement('div');
+    e.className = 'chip' + (active ? ' active' : '');
+    e.textContent = text;
+    e.onclick = () => {
+      chips.querySelectorAll('.chip').forEach(x => x.classList.remove('active'));
+      e.classList.add('active');
+      curFilter = val;
+      drawList();
+    };
+    return e;
+  }
+
+  function drawList() {
+    area.innerHTML = '';
+    const list = curFilter === 'all' ? wrongQs : wrongQs.filter(q => q.c === curFilter);
+    if (list.length === 0) {
+      area.innerHTML = '<div class="empty"><div class="ico">空</div>目前沒有錯題，繼續加油！</div>';
+      return;
+    }
+    const top = document.createElement('div');
+    top.style.marginBottom = '12px';
+    top.innerHTML = `<button class="primary" id="wrongPracticeAll">挑戰所有 ${list.length} 道錯題</button>
+      <button class="ghost" id="wrongRandom10" style="margin-left:8px;">隨機 10 題</button>`;
+    area.appendChild(top);
+    document.getElementById('wrongPracticeAll').onclick = () => startQuestionFlow('wrongArea', shuffle(list));
+    document.getElementById('wrongRandom10').onclick = () => startQuestionFlow('wrongArea', shuffle(list).slice(0, Math.min(10, list.length)));
+
+    list.slice(0, 50).forEach(q => {
+      const r = renderQuestion(q, { showAnswerImmediately: true, showAnswer: false });
+      r.el.querySelectorAll('.opt').forEach(o => {
+        o.classList.add('disabled');
+        o.style.pointerEvents = 'none';
+        if (o.dataset.letter === q.a) o.classList.add('correct');
+        const last = APP.history[qid(q)].lastA;
+        if (o.dataset.letter === last && last !== q.a) o.classList.add('wrong');
+      });
+      area.appendChild(r.el);
+      const sp = document.createElement('div'); sp.style.height = '14px';
+      area.appendChild(sp);
+    });
+    if (list.length > 50) {
+      const more = document.createElement('div');
+      more.className = 'small';
+      more.style.textAlign = 'center';
+      more.style.padding = '14px';
+      more.textContent = `(僅顯示前 50 題，共 ${list.length} 題)`;
+      area.appendChild(more);
+    }
+  }
+  drawList();
+}
+
+// ===== NOTES =====
+document.getElementById('noteSave').addEventListener('click', () => {
+  const title = document.getElementById('noteTitle').value.trim();
+  const body = document.getElementById('noteBody').value.trim();
+  const chap = document.getElementById('noteChap').value;
+  const linkedQid = document.getElementById('noteEditingHint').dataset.linkedQid;
+  if (!title || !body) { alert('請輸入標題與內容'); return; }
+  const editingId = document.getElementById('noteEditingHint').dataset.editId;
+  if (editingId) {
+    const n = APP.notes.find(x => x.id === editingId);
+    if (n) { n.title = title; n.body = body; n.chap = chap; n.t = Date.now(); }
+  } else {
+    APP.notes.unshift({
+      id: 'n_' + Date.now(),
+      title, body, chap,
+      linkedQid: linkedQid || null,
+      t: Date.now()
+    });
+  }
+  STORE.set('notes', APP.notes);
+  document.getElementById('noteTitle').value = '';
+  document.getElementById('noteBody').value = '';
+  document.getElementById('noteEditingHint').textContent = '';
+  delete document.getElementById('noteEditingHint').dataset.linkedQid;
+  delete document.getElementById('noteEditingHint').dataset.editId;
+  renderNotes();
+  refreshHeader();
+});
+
+let noteFilterCur = 'all';
+function renderNotes() {
+  const filter = document.getElementById('noteFilter');
+  filter.innerHTML = '';
+  const allChip = document.createElement('div');
+  allChip.className = 'chip' + (noteFilterCur === 'all' ? ' active' : '');
+  allChip.textContent = `全部 (${APP.notes.length})`;
+  allChip.onclick = () => { noteFilterCur = 'all'; renderNotes(); };
+  filter.appendChild(allChip);
+  CHAPTERS.forEach(c => {
+    const cnt = APP.notes.filter(n => n.chap === c.id).length;
+    if (!cnt) return;
+    const chip = document.createElement('div');
+    chip.className = 'chip' + (noteFilterCur === c.id ? ' active' : '');
+    chip.textContent = `${c.name} (${cnt})`;
+    chip.onclick = () => { noteFilterCur = c.id; renderNotes(); };
+    filter.appendChild(chip);
+  });
+
+  const list = document.getElementById('noteList');
+  list.innerHTML = '';
+  const filtered = noteFilterCur === 'all' ? APP.notes : APP.notes.filter(n => n.chap === noteFilterCur);
+  if (!filtered.length) {
+    list.innerHTML = '<div class="empty"><div class="ico">墨</div>尚無筆記，動手記下第一條心得吧。</div>';
+    return;
+  }
+  filtered.forEach(n => {
+    const div = document.createElement('div');
+    div.className = 'note';
+    div.innerHTML = `
+      <div class="note-title">${escapeHTML(n.title)}</div>
+      <div class="note-meta">${chapterName(n.chap||'')} · ${new Date(n.t).toLocaleString('zh-TW')}${n.linkedQid?` · 連結 ${n.linkedQid}`:''}</div>
+      <div class="note-body">${escapeHTML(n.body)}</div>
+      <div class="note-actions">
+        <button data-act="edit">編輯</button>
+        <button data-act="delete">刪除</button>
+        ${n.linkedQid ? '<button data-act="goq">看題目</button>' : ''}
+      </div>
+    `;
+    div.querySelector('[data-act="edit"]').onclick = () => {
+      document.getElementById('noteTitle').value = n.title;
+      document.getElementById('noteBody').value = n.body;
+      document.getElementById('noteChap').value = n.chap || '';
+      document.getElementById('noteEditingHint').textContent = '編輯中…';
+      document.getElementById('noteEditingHint').dataset.editId = n.id;
+      window.scrollTo(0, 0);
+    };
+    div.querySelector('[data-act="delete"]').onclick = () => {
+      if (confirm('確定刪除這篇筆記？')) {
+        APP.notes = APP.notes.filter(x => x.id !== n.id);
+        STORE.set('notes', APP.notes);
+        renderNotes();
+        refreshHeader();
+      }
+    };
+    if (n.linkedQid) {
+      div.querySelector('[data-act="goq"]').onclick = () => {
+        const q = APP.questions.find(x => qid(x) === n.linkedQid);
+        if (!q) return alert('找不到題目');
+        switchTab('practice');
+        document.getElementById('practiceArea').innerHTML = '';
+        const r = renderQuestion(q);
+        document.getElementById('practiceArea').appendChild(r.el);
+      };
+    }
+    list.appendChild(div);
+  });
+}
+
+// ===== REPORT =====
+function renderReport() {
+  const total = APP.questions.length;
+  const done = Object.keys(APP.history).length;
+  const correct = Object.values(APP.history).filter(h => h.correct).length;
+  const acc = done ? Math.round(correct/done*100) : 0;
+  const mockAvg = APP.mockHistory.length ? (APP.mockHistory.reduce((s,m)=>s+parseFloat(m.score),0)/APP.mockHistory.length).toFixed(1) : '–';
+  const mockBest = APP.mockHistory.length ? Math.max(...APP.mockHistory.map(m=>parseFloat(m.score))).toFixed(1) : '–';
+
+  document.getElementById('reportStats').innerHTML = `
+    <div class="stat-tile"><div class="num">${done}</div><div class="lbl">已作答</div></div>
+    <div class="stat-tile"><div class="num">${acc}%</div><div class="lbl">總正確率</div></div>
+    <div class="stat-tile"><div class="num">${APP.mockHistory.length}</div><div class="lbl">模擬考次數</div></div>
+    <div class="stat-tile"><div class="num">${mockAvg}</div><div class="lbl">模擬考平均</div></div>
+    <div class="stat-tile"><div class="num">${mockBest}</div><div class="lbl">模擬考最高</div></div>
+  `;
+
+  // chapter chart
+  const chapChart = document.getElementById('chapterChart');
+  chapChart.innerHTML = '';
+  CHAPTERS.forEach(ch => {
+    const inChap = Object.keys(APP.history).filter(id => APP.history[id].chap === ch.id);
+    const total = (APP.byChapter[ch.id] || []).length;
+    if (!total) return;
+    const cor = inChap.filter(id => APP.history[id].correct).length;
+    const pct = inChap.length ? Math.round(cor/inChap.length*100) : 0;
+    chapChart.innerHTML += `<div class="bar-row">
+      <div class="lbl">${ch.name}</div>
+      <div class="bar"><span style="width:${pct}%;"></span></div>
+      <div class="num">${cor}/${inChap.length}<span style="color:var(--ink-soft);font-weight:400;"> / ${total}</span></div>
+    </div>`;
+  });
+
+  // year chart
+  const yearChart = document.getElementById('yearChart');
+  yearChart.innerHTML = '';
+  Object.keys(APP.byYear).sort().forEach(y => {
+    const inY = Object.values(APP.history).filter(h => h.year == y);
+    const total = APP.byYear[y].length;
+    const cor = inY.filter(h => h.correct).length;
+    const pct = inY.length ? Math.round(cor/inY.length*100) : 0;
+    yearChart.innerHTML += `<div class="bar-row">
+      <div class="lbl">${y} 學年</div>
+      <div class="bar"><span style="width:${pct}%;"></span></div>
+      <div class="num">${cor}/${inY.length}<span style="color:var(--ink-soft);font-weight:400;"> / ${total}</span></div>
+    </div>`;
+  });
+
+  // mock history
+  const mockH = document.getElementById('mockHistory');
+  if (!APP.mockHistory.length) {
+    mockH.innerHTML = '<div class="empty small">尚未進行過模擬考試。</div>';
+  } else {
+    mockH.innerHTML = `<table>
+      <thead><tr><th>日期</th><th>分數</th><th>答對</th><th>答錯</th><th>未答</th><th>耗時(分)</th></tr></thead>
+      <tbody>
+        ${APP.mockHistory.slice(0, 10).map(m => `<tr>
+          <td>${new Date(m.date).toLocaleString('zh-TW')}</td>
+          <td><b>${m.score}</b></td>
+          <td>${m.correct}</td>
+          <td>${m.wrong}</td>
+          <td>${m.blank}</td>
+          <td>${Math.round(m.duration/60)}</td>
+        </tr>`).join('')}
+      </tbody>
+    </table>`;
+  }
+}
+
+// data export/import
+document.getElementById('exportData').onclick = () => {
+  const data = {
+    history: APP.history, notes: APP.notes, mockHistory: APP.mockHistory,
+    exportTime: new Date().toISOString()
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `bio_practice_${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+};
+document.getElementById('importData').onclick = () => document.getElementById('importFile').click();
+document.getElementById('importFile').addEventListener('change', e => {
+  const f = e.target.files[0]; if (!f) return;
+  const r = new FileReader();
+  r.onload = () => {
+    try {
+      const d = JSON.parse(r.result);
+      if (d.history) APP.history = d.history;
+      if (d.notes) APP.notes = d.notes;
+      if (d.mockHistory) APP.mockHistory = d.mockHistory;
+      STORE.set('history', APP.history);
+      STORE.set('notes', APP.notes);
+      STORE.set('mockHistory', APP.mockHistory);
+      alert('資料匯入成功'); renderReport(); refreshHeader(); refreshHomeStats();
+    } catch (err) { alert('匯入失敗：檔案格式錯誤'); }
+  };
+  r.readAsText(f);
+});
+document.getElementById('resetData').onclick = () => {
+  if (!confirm('確定清除所有作答紀錄、筆記與模擬考歷史？此動作無法復原。')) return;
+  if (!confirm('再次確認，真的要清除？')) return;
+  APP.history = {}; APP.notes = []; APP.mockHistory = [];
+  STORE.set('history', {}); STORE.set('notes', []); STORE.set('mockHistory', []);
+  renderReport(); refreshHeader(); refreshHomeStats(); refreshWrongBadge();
+  alert('已清除');
+};
+
+// init
+window.addEventListener('DOMContentLoaded', initData);
+
+</script>
+</body>
+</html>
