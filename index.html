@@ -2,8 +2,21 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>後中醫生物學練習器 · 神農藥草園分支</title>
+
+<!-- ===== PWA ===== -->
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#b13e2f">
+<meta name="application-name" content="後中醫生物學練習器">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="後中醫生物">
+<link rel="icon" href="./icons/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="./icons/favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+<link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;600;700;900&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -606,6 +619,8 @@
   .bar-row .bar { flex: 1; height: 14px; background: var(--paper-deep); border-radius: 2px; overflow: hidden; }
   .bar-row .bar > span { display: block; height: 100%; background: linear-gradient(90deg, var(--jade), var(--gold)); }
   .bar-row .num { width: 60px; text-align: right; font-weight: 600; }
+  .curve-tab { padding: 5px 14px; font-size: 13px; }
+  .curve-tab.active { background: var(--jade-deep); color: var(--paper-light); border-color: var(--jade-deep); }
 
   @media (max-width: 600px) {
     .app { padding: 16px 12px 60px; }
@@ -643,6 +658,10 @@
       <h2>今日學習</h2>
       <div class="stat-grid" id="homeStats"></div>
       <div class="mode-grid">
+        <button class="mode-btn" id="homeSmartReview" data-go="practice">
+          <div class="ttl">智慧複習 <span id="homeDueBadge" class="badge" style="background:var(--gold);display:none;">0</span></div>
+          <div class="desc">依間隔重複(SM-2)演算法，優先推送「快遺忘」的到期題目，記憶效率最佳化。</div>
+        </button>
         <button class="mode-btn" data-go="practice">
           <div class="ttl">每日練習</div>
           <div class="desc">隨機抽取題目，作答後即時顯示詳解與所屬 Campbell 章節。</div>
@@ -666,9 +685,9 @@
       <h2>使用說明</h2>
       <div style="line-height: 1.95; font-size:14px; color: var(--ink-soft);">
         <p>• 本練習器內建 <b>105–115 學年度共 550 道</b> 中國醫學士後中醫考古題，皆已對照 Campbell Biology 教材章節。</p>
-        <p>• 答題紀錄、錯題、筆記均以 <b>瀏覽器本地儲存</b>（localStorage）保存，建議使用同一瀏覽器固定使用。</p>
-        <p>• 點擊題目右上方「<b>記筆記</b>」可將該題納入個人知識點筆記庫，配合艾賓豪斯遺忘曲線複習。</p>
-        <p>• 模擬考試結束後會依章節分析作答狀況，協助找出弱點。</p>
+        <p>• <b>智慧複習</b>採用間隔重複(SM-2)演算法：答對的題目複習間隔逐步拉長，答錯則隔天重來，把時間花在快遺忘的題目上。</p>
+        <p>• <b>學習報告</b>新增「弱點診斷」與「模擬考分數預測」，點弱點章節可直接進入該章練習。</p>
+        <p>• 答題紀錄、錯題、筆記、複習排程均以 <b>瀏覽器本地儲存</b>（localStorage）保存，建議使用同一瀏覽器固定使用。</p>
         <p>• 計分規則對照中國醫考試：<b>每題 2 分，答錯倒扣 0.7 分（111 學年起）</b>，未作答不計分。</p>
       </div>
     </div>
@@ -701,6 +720,8 @@
           <option value="random">隨機抽題</option>
           <option value="unseen">未做過優先</option>
           <option value="mistakes">含已錯題</option>
+          <option value="smart">智慧複習（到期優先）</option>
+          <option value="hard">只練難題（多次答錯）</option>
         </select>
         <button class="primary" id="practiceStart">開始練習</button>
       </div>
@@ -780,6 +801,29 @@
         <button class="ghost" id="resetData" style="border-color:var(--cinnabar); color:var(--cinnabar);">清除所有紀錄</button>
         <input type="file" id="importFile" accept=".json" class="hidden">
       </div>
+    </div>
+
+    <div class="card">
+      <h2>學習曲線</h2>
+      <p class="small" style="margin-bottom:10px;">每天自動記錄一筆學習快照，呈現你隨時間的進步軌跡。資料同時包含在「匯出資料」中。</p>
+      <div id="curveToggle" style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;">
+        <button class="ghost curve-tab active" data-metric="acc">總正確率</button>
+        <button class="ghost curve-tab" data-metric="done">累計作答數</button>
+        <button class="ghost curve-tab" data-metric="mockAvg">模考平均</button>
+      </div>
+      <div id="curveArea"></div>
+    </div>
+
+    <div class="card">
+      <h2>弱點診斷</h2>
+      <p class="small" style="margin-bottom:12px;">依你的答對率與練習覆蓋率排序，最該補強的章節排在最前面。點章節可直接進入該章練習。</p>
+      <div id="weaknessArea"></div>
+    </div>
+
+    <div class="card">
+      <h2>模擬考分數預測</h2>
+      <p class="small" style="margin-bottom:12px;">依你近期作答正確率，套用中國醫計分規則（每題 2 分、答錯倒扣 0.7 分、50 題全作答）推估的期望分數，僅供參考。</p>
+      <div id="predictArea"></div>
     </div>
   </div>
 </div>
@@ -1671,9 +1715,16 @@ function refreshHomeStats() {
     <div class="stat-tile"><div class="num">${done}</div><div class="lbl">已作答題數</div></div>
     <div class="stat-tile"><div class="num">${acc}%</div><div class="lbl">總正確率</div></div>
     <div class="stat-tile"><div class="num">${wrong}</div><div class="lbl">錯題待複習</div></div>
+    <div class="stat-tile"><div class="num" style="color:var(--gold);">${srsDueCount()}</div><div class="lbl">今日待複習</div></div>
     <div class="stat-tile"><div class="num">${todayDone}</div><div class="lbl">今日已做</div></div>
-    <div class="stat-tile"><div class="num">${APP.mockHistory.length}</div><div class="lbl">模擬考次數</div></div>
   `;
+  // 智慧複習徽章
+  const dueBadge = document.getElementById('homeDueBadge');
+  if (dueBadge) {
+    const dc = srsDueCount();
+    dueBadge.textContent = dc;
+    dueBadge.style.display = dc > 0 ? 'inline-block' : 'none';
+  }
 }
 
 function refreshWrongBadge() {
@@ -1787,6 +1838,7 @@ function renderQuestion(q, opts = {}) {
       APP.history[id].chap = q.c;
       APP.history[id].year = q.y;
       STORE.set('history', APP.history);
+      srsRecord(id, correct);
       refreshHeader();
       refreshWrongBadge();
     }
@@ -1851,6 +1903,17 @@ document.getElementById('practiceStart').addEventListener('click', () => {
   } else if (type === 'mistakes') {
     const wrong = pool.filter(q => APP.history[qid(q)] && !APP.history[qid(q)].correct);
     pool = wrong.length >= n ? wrong : wrong.concat(shuffle(pool.filter(q => !wrong.includes(q))).slice(0, n - wrong.length));
+  } else if (type === 'smart') {
+    // 間隔重複：到期(或新)的複習題優先，已按到期時間排序，不洗牌以保順序
+    const duePool = srsDueList().filter(q => pool.includes(q));
+    if (duePool.length === 0) { alert('目前沒有到期的複習題！可先用其他模式累積作答紀錄，系統會自動排定複習時程。'); return; }
+    const list = duePool.slice(0, n);
+    startQuestionFlow('practiceArea', list);
+    return;
+  } else if (type === 'hard') {
+    const hard = hardList().filter(q => pool.includes(q));
+    if (hard.length === 0) { alert('目前沒有「多次答錯」的難題，繼續加油！'); return; }
+    pool = hard;
   }
   const list = shuffle(pool).slice(0, n);
   if (list.length === 0) { alert('題庫無符合條件的題目'); return; }
@@ -2075,6 +2138,7 @@ function finishMock(timeup = false) {
       APP.history[id].lastT = Date.now();
       APP.history[id].chap = q.c;
       APP.history[id].year = q.y;
+      srsRecord(id, isCorrect);
     }
   });
   STORE.set('history', APP.history);
@@ -2396,12 +2460,176 @@ function renderReport() {
       </tbody>
     </table>`;
   }
+
+  renderWeakness();
+  renderPrediction();
+  renderCurve();
 }
+
+// ===== 弱點診斷 =====
+function renderWeakness() {
+  const el = document.getElementById('weaknessArea');
+  if (!el) return;
+  const data = weaknessByChapter().filter(x => x.answered > 0);
+  if (data.length === 0) {
+    el.innerHTML = '<div class="empty small">尚無作答紀錄，先去練習幾題，這裡就會出現你的弱點分析。</div>';
+    return;
+  }
+  // 弱點分數：正確率越低、覆蓋率越低 → 越該補。優先看正確率。
+  data.sort((a, b) => (a.acc - b.acc) || (a.coverage - b.coverage));
+  el.innerHTML = data.map(x => {
+    const accPct = x.acc === null ? '–' : Math.round(x.acc * 100);
+    const covPct = Math.round(x.coverage * 100);
+    const danger = x.acc !== null && x.acc < 0.6;
+    const barColor = danger ? 'var(--cinnabar)' : (x.acc < 0.8 ? 'var(--gold)' : 'var(--jade-deep)');
+    return `<div class="bar-row" style="cursor:pointer;" data-chap="${x.ch.id}" title="點擊進入此章節練習">
+      <div class="lbl">${x.ch.name}${danger ? ' ⚠' : ''}</div>
+      <div class="bar"><span style="width:${x.acc===null?0:accPct}%; background:${barColor};"></span></div>
+      <div class="num">${accPct}%<span style="color:var(--ink-soft);font-weight:400;"> · 練${covPct}%</span></div>
+    </div>`;
+  }).join('');
+  el.querySelectorAll('[data-chap]').forEach(row => {
+    row.addEventListener('click', () => {
+      switchTab('chapter');
+      startChapterPractice(row.dataset.chap);
+    });
+  });
+}
+
+// ===== 模擬考分數預測 =====
+function renderPrediction() {
+  const el = document.getElementById('predictArea');
+  if (!el) return;
+  const p = predictMockScore();
+  if (!p) {
+    el.innerHTML = '<div class="empty small">作答紀錄還太少（少於 10 題），多練一些後即可預測模考分數。</div>';
+    return;
+  }
+  const exp = p.expected.toFixed(1);
+  const lo = p.lo.toFixed(1);
+  const hi = Math.min(100, p.hi).toFixed(1);
+  const passHint = p.expected >= 60
+    ? '<span style="color:var(--jade-deep);">目前期望分數已過半，保持手感、針對弱章補強。</span>'
+    : '<span style="color:var(--cinnabar);">目前期望分數偏低，建議優先攻克弱點章節與難題。</span>';
+  el.innerHTML = `
+    <div class="stat-grid">
+      <div class="stat-tile"><div class="num">${exp}</div><div class="lbl">期望分數 / 100</div></div>
+      <div class="stat-tile"><div class="num">${Math.round(p.p*100)}%</div><div class="lbl">近期正確率</div></div>
+      <div class="stat-tile"><div class="num">${lo}–${hi}</div><div class="lbl">可能區間</div></div>
+      <div class="stat-tile"><div class="num">${p.sample}</div><div class="lbl">取樣作答數</div></div>
+    </div>
+    <p class="small" style="margin-top:12px; line-height:1.8;">
+      推估方式：假設 50 題全部作答，期望分 = 50 × 正確率 × 2 − 50 × (1−正確率) × 0.7。${passHint}
+      <br>注意：此為理想化估計，未計入空白不倒扣的保守策略，實際分數受題目難度分布影響。
+    </p>`;
+}
+
+// ===== 學習曲線（純 SVG，離線可用） =====
+let curveMetric = 'acc';
+const CURVE_META = {
+  acc:     { label: '總正確率', unit: '%',  fixedMax: 100, color: 'var(--jade-deep)' },
+  done:    { label: '累計作答數', unit: '題', fixedMax: null, color: 'var(--gold)' },
+  mockAvg: { label: '模考平均', unit: '分', fixedMax: 100, color: 'var(--cinnabar)' }
+};
+
+function renderCurve() {
+  const el = document.getElementById('curveArea');
+  if (!el) return;
+  const meta = CURVE_META[curveMetric];
+  const snaps = [...APP.snapshots].sort((a, b) => (a.date < b.date ? -1 : 1));
+  // 取出該指標有效資料點
+  const pts = [];
+  snaps.forEach(s => {
+    let v = s[curveMetric];
+    if (curveMetric === 'mockAvg' && (v === null || v === undefined)) return;
+    if (v === null || v === undefined) v = 0;
+    pts.push({ date: s.date, v });
+  });
+
+  if (pts.length < 2) {
+    el.innerHTML = `<div class="empty small">「${meta.label}」目前只有 ${pts.length} 筆紀錄${curveMetric==='mockAvg'?'（需先完成模擬考）':''}，至少累積兩天的紀錄才能畫出曲線。資料每天開啟 App 時自動記錄。</div>`;
+    return;
+  }
+
+  // 版面
+  const W = 640, H = 260, padL = 46, padR = 16, padT = 16, padB = 38;
+  const plotW = W - padL - padR, plotH = H - padT - padB;
+  const ys = pts.map(p => p.v);
+  let yMax = meta.fixedMax !== null ? meta.fixedMax : Math.max(...ys);
+  if (meta.fixedMax === null) { yMax = Math.ceil((yMax + 1) / 5) * 5; if (yMax === 0) yMax = 5; }
+  const yMin = 0;
+  const xAt = i => padL + (pts.length === 1 ? plotW / 2 : (i / (pts.length - 1)) * plotW);
+  const yAt = v => padT + plotH - ((v - yMin) / (yMax - yMin)) * plotH;
+
+  // Y 軸格線(4 等分)
+  const gridN = 4;
+  let grid = '';
+  for (let g = 0; g <= gridN; g++) {
+    const val = yMin + (yMax - yMin) * g / gridN;
+    const y = yAt(val);
+    grid += `<line x1="${padL}" y1="${y.toFixed(1)}" x2="${W - padR}" y2="${y.toFixed(1)}" stroke="var(--line)" stroke-width="1" opacity="0.5"/>`;
+    grid += `<text x="${padL - 6}" y="${(y + 4).toFixed(1)}" text-anchor="end" font-size="11" fill="var(--ink-soft)">${Math.round(val)}</text>`;
+  }
+
+  // X 軸日期標籤(最多 6 個，含頭尾)
+  const fmt = d => { const [y, m, dd] = d.split('-'); return `${m}/${dd}`; };
+  const labelIdx = new Set([0, pts.length - 1]);
+  const step = Math.max(1, Math.floor((pts.length - 1) / 5));
+  for (let i = 0; i < pts.length; i += step) labelIdx.add(i);
+  let xLabels = '';
+  [...labelIdx].sort((a, b) => a - b).forEach(i => {
+    xLabels += `<text x="${xAt(i).toFixed(1)}" y="${H - padB + 18}" text-anchor="middle" font-size="11" fill="var(--ink-soft)">${fmt(pts[i].date)}</text>`;
+  });
+
+  // 折線 + 區域
+  const linePts = pts.map((p, i) => `${xAt(i).toFixed(1)},${yAt(p.v).toFixed(1)}`).join(' ');
+  const areaPts = `${padL},${(padT + plotH).toFixed(1)} ` + linePts + ` ${xAt(pts.length - 1).toFixed(1)},${(padT + plotH).toFixed(1)}`;
+  // 資料點(附原生 tooltip)
+  let dots = '';
+  pts.forEach((p, i) => {
+    dots += `<circle cx="${xAt(i).toFixed(1)}" cy="${yAt(p.v).toFixed(1)}" r="3.5" fill="${meta.color}" stroke="var(--paper-light)" stroke-width="1.5"><title>${p.date}　${meta.label}：${p.v}${meta.unit}</title></circle>`;
+  });
+
+  // 起訖與變化摘要
+  const first = pts[0].v, last = pts[pts.length - 1].v;
+  const delta = last - first;
+  const deltaStr = (delta > 0 ? '↑ +' : delta < 0 ? '↓ ' : '→ ') + Math.abs(delta) + meta.unit;
+  const deltaColor = delta > 0 ? 'var(--jade-deep)' : (delta < 0 ? 'var(--cinnabar)' : 'var(--ink-soft)');
+
+  el.innerHTML = `
+    <svg viewBox="0 0 ${W} ${H}" width="100%" preserveAspectRatio="xMidYMid meet" role="img" aria-label="${meta.label}學習曲線">
+      ${grid}
+      <polygon points="${areaPts}" fill="${meta.color}" opacity="0.10"/>
+      <polyline points="${linePts}" fill="none" stroke="${meta.color}" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+      ${dots}
+      ${xLabels}
+    </svg>
+    <div class="small" style="margin-top:8px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:6px;">
+      <span>區間：${fmt(pts[0].date)} → ${fmt(pts[pts.length-1].date)}（${pts.length} 筆）</span>
+      <span>變化：起 ${first}${meta.unit} → 迄 ${last}${meta.unit}　<b style="color:${deltaColor};">${deltaStr}</b></span>
+    </div>`;
+}
+
+// 指標切換
+(function () {
+  const wrap = document.getElementById('curveToggle');
+  if (!wrap) return;
+  wrap.addEventListener('click', e => {
+    const btn = e.target.closest('.curve-tab');
+    if (!btn) return;
+    curveMetric = btn.dataset.metric;
+    wrap.querySelectorAll('.curve-tab').forEach(b => b.classList.toggle('active', b === btn));
+    renderCurve();
+  });
+})();
 
 // data export/import
 document.getElementById('exportData').onclick = () => {
+  captureSnapshot();   // 匯出前先把今天的快照更新到最新
   const data = {
     history: APP.history, notes: APP.notes, mockHistory: APP.mockHistory,
+    srs: APP.srs,
+    snapshots: APP.snapshots,   // 學習曲線記錄
     exportTime: new Date().toISOString()
   };
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
@@ -2420,9 +2648,13 @@ document.getElementById('importFile').addEventListener('change', e => {
       if (d.history) APP.history = d.history;
       if (d.notes) APP.notes = d.notes;
       if (d.mockHistory) APP.mockHistory = d.mockHistory;
+      if (d.srs) APP.srs = d.srs;
+      if (d.snapshots) APP.snapshots = d.snapshots;
       STORE.set('history', APP.history);
       STORE.set('notes', APP.notes);
       STORE.set('mockHistory', APP.mockHistory);
+      STORE.set('srs', APP.srs);
+      STORE.set('snapshots', APP.snapshots);
       alert('資料匯入成功'); renderReport(); refreshHeader(); refreshHomeStats();
     } catch (err) { alert('匯入失敗：檔案格式錯誤'); }
   };
@@ -2431,15 +2663,195 @@ document.getElementById('importFile').addEventListener('change', e => {
 document.getElementById('resetData').onclick = () => {
   if (!confirm('確定清除所有作答紀錄、筆記與模擬考歷史？此動作無法復原。')) return;
   if (!confirm('再次確認，真的要清除？')) return;
-  APP.history = {}; APP.notes = []; APP.mockHistory = [];
-  STORE.set('history', {}); STORE.set('notes', []); STORE.set('mockHistory', []);
+  APP.history = {}; APP.notes = []; APP.mockHistory = []; APP.srs = {}; APP.snapshots = [];
+  STORE.set('history', {}); STORE.set('notes', []); STORE.set('mockHistory', []); STORE.set('srs', {}); STORE.set('snapshots', []);
   renderReport(); refreshHeader(); refreshHomeStats(); refreshWrongBadge();
   alert('已清除');
 };
 
-// init
-window.addEventListener('DOMContentLoaded', initData);
+// ============================================================
+// 提升模組 v1 — 間隔重複(SM-2) · 弱點診斷 · 模考預測 · 難題篩選
+// 全部為純前端邏輯，離線可用，與既有 localStorage(bio_ 前綴)相容
+// ============================================================
+const DAY_MS = 86400000;
+APP.srs = STORE.get('srs', {});   // qid -> {ef, interval, reps, due, last}
+APP.snapshots = STORE.get('snapshots', []);   // 學習曲線：每日一筆學習快照
 
+// 記錄/更新「今日」學習快照(背景自動，無 UI)；匯出時一併帶走，可重建學習曲線
+function captureSnapshot() {
+  const today = new Date().toISOString().slice(0, 10);  // YYYY-MM-DD
+  const done = Object.keys(APP.history).length;
+  const correct = Object.values(APP.history).filter(h => h.correct).length;
+  const acc = done ? Math.round(correct / done * 100) : 0;
+  const mockScores = APP.mockHistory.map(m => parseFloat(m.score)).filter(n => !isNaN(n));
+  const mockAvg = mockScores.length ? +(mockScores.reduce((s, x) => s + x, 0) / mockScores.length).toFixed(1) : null;
+  const mockBest = mockScores.length ? Math.max(...mockScores) : null;
+  // 各章節正確率
+  const byChapter = {};
+  CHAPTERS.forEach(ch => {
+    const ids = Object.keys(APP.history).filter(id => APP.history[id].chap === ch.id);
+    const cor = ids.filter(id => APP.history[id].correct).length;
+    byChapter[ch.id] = { answered: ids.length, correct: cor };
+  });
+  const snap = {
+    date: today,
+    ts: new Date().toISOString(),
+    done, correct, acc,
+    mockCount: APP.mockHistory.length,
+    mockAvg, mockBest,
+    dueCount: (typeof srsDueCount === 'function') ? srsDueCount() : null,
+    byChapter
+  };
+  // 同一天只留最新一筆(upsert)
+  const idx = APP.snapshots.findIndex(s => s.date === today);
+  if (idx >= 0) APP.snapshots[idx] = snap;
+  else APP.snapshots.push(snap);
+  // 上限兩年，避免無限成長
+  if (APP.snapshots.length > 730) APP.snapshots = APP.snapshots.slice(-730);
+  STORE.set('snapshots', APP.snapshots);
+}
+
+// 依作答結果更新該題的間隔重複排程(SM-2 演算法)
+function srsRecord(id, correct, ts) {
+  ts = ts || Date.now();
+  let card = APP.srs[id] || { ef: 2.5, interval: 0, reps: 0, due: ts, last: 0 };
+  const q = correct ? 4 : 2;            // 二元正誤映射為 SM-2 品質分數
+  if (q < 3) {
+    card.reps = 0;
+    card.interval = 1;                  // 答錯：隔天再複習
+  } else {
+    if (card.reps === 0) card.interval = 1;
+    else if (card.reps === 1) card.interval = 6;
+    else card.interval = Math.round(card.interval * card.ef);
+    card.reps += 1;
+  }
+  card.ef = Math.max(1.3, card.ef + (0.1 - (5 - q) * (0.08 + (5 - q) * 0.02)));
+  card.due = ts + card.interval * DAY_MS;
+  card.last = ts;
+  APP.srs[id] = card;
+  STORE.set('srs', APP.srs);
+}
+
+// 取得到期的複習題(僅限已作答過者)，最久到期者排前
+function srsDueList() {
+  const now = Date.now();
+  const due = [];
+  APP.questions.forEach(q => {
+    const id = qid(q);
+    if (!APP.history[id]) return;       // 沒做過的題不納入複習
+    const card = APP.srs[id];
+    if (!card || card.due <= now) due.push({ q, due: card ? card.due : 0 });
+  });
+  due.sort((a, b) => a.due - b.due);
+  return due.map(d => d.q);
+}
+function srsDueCount() { return srsDueList().length; }
+
+// 難題：歷史答錯 >= 2 次，或最近一次仍為錯
+function hardList() {
+  return APP.questions.filter(q => {
+    const h = APP.history[qid(q)];
+    if (!h) return false;
+    const wrongCount = (h.answers || []).filter(a => !a.c).length;
+    return wrongCount >= 2 || !h.correct;
+  });
+}
+
+// 各章節弱點統計
+function weaknessByChapter() {
+  return CHAPTERS.map(ch => {
+    const ids = Object.keys(APP.history).filter(id => APP.history[id].chap === ch.id);
+    const answered = ids.length;
+    const correct = ids.filter(id => APP.history[id].correct).length;
+    const total = (APP.byChapter[ch.id] || []).length;
+    return {
+      ch, answered, correct,
+      acc: answered ? correct / answered : null,
+      total, coverage: total ? answered / total : 0
+    };
+  }).filter(x => x.total > 0);
+}
+
+// 模考分數預測(以近期作答正確率推估，套用 CMU 計分)
+function predictMockScore() {
+  const events = [];
+  Object.values(APP.history).forEach(h => (h.answers || []).forEach(a => events.push({ c: a.c, t: a.t })));
+  if (events.length < 10) return null;
+  events.sort((a, b) => b.t - a.t);
+  const recent = events.slice(0, 120);
+  const p = recent.filter(e => e.c).length / recent.length;
+  const N = 50;
+  const expected = N * p * 2 - N * (1 - p) * 0.7;
+  const sd = Math.sqrt(N * p * (1 - p));
+  const lo = Math.max(0, (N * p - sd) * 2 - (N * (1 - p) + sd) * 0.7);
+  const hi = (N * p + sd) * 2 - Math.max(0, N * (1 - p) - sd) * 0.7;
+  return { p, expected, lo, hi, sample: recent.length };
+}
+
+// 首頁「智慧複習」按鈕：切到每日練習、設為到期複習並自動開始
+(function () {
+  const btn = document.getElementById('homeSmartReview');
+  if (!btn) return;
+  btn.addEventListener('click', () => {
+    setTimeout(() => {
+      const typeSel = document.getElementById('practiceType');
+      if (typeSel) typeSel.value = 'smart';
+      document.getElementById('practiceStart').click();
+    }, 60);   // 等 switchTab 切換完成
+  }, true);
+})();
+
+// init
+window.addEventListener('DOMContentLoaded', () => {
+  initData();
+  captureSnapshot();   // 背景記錄當日學習快照(學習曲線用)
+});
+
+</script>
+<!-- ===== PWA: Service Worker 註冊 + 安裝提示 ===== -->
+<script>
+(function () {
+  // 註冊 Service Worker（離線可用）
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('./service-worker.js')
+        .catch(function (err) { console.warn('SW 註冊失敗:', err); });
+    });
+  }
+
+  // 「安裝 App」提示：beforeinstallprompt 觸發時才顯示按鈕
+  var deferredPrompt = null;
+  window.addEventListener('beforeinstallprompt', function (e) {
+    e.preventDefault();
+    deferredPrompt = e;
+    showInstallButton();
+  });
+
+  function showInstallButton() {
+    if (document.getElementById('pwaInstallBtn')) return;
+    var host = document.getElementById('homeStats') || document.querySelector('#panel-home .card');
+    if (!host) return;
+    var btn = document.createElement('button');
+    btn.id = 'pwaInstallBtn';
+    btn.className = 'primary';
+    btn.textContent = '📲 安裝到主畫面（離線可用）';
+    btn.style.cssText = 'margin-top:14px;width:100%;';
+    btn.addEventListener('click', async function () {
+      if (!deferredPrompt) return;
+      deferredPrompt.prompt();
+      try { await deferredPrompt.userChoice; } catch (e) {}
+      deferredPrompt = null;
+      btn.remove();
+    });
+    host.parentNode.insertBefore(btn, host.nextSibling);
+  }
+
+  // 已安裝後隱藏提示
+  window.addEventListener('appinstalled', function () {
+    var b = document.getElementById('pwaInstallBtn');
+    if (b) b.remove();
+  });
+})();
 </script>
 </body>
 </html>
