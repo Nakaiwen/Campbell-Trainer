@@ -5,7 +5,7 @@
  * ⚠ 更新 App 時務必把下面的 CACHE_VERSION 改一個新版號，
  *   舊快取才會被清掉、使用者才會拿到新版內容。
  * ============================================================ */
-const CACHE_VERSION = 'biotrainer-v115plus-1';
+const CACHE_VERSION = 'biotrainer-v115plus-2-yishou';
 const CACHE_NAME = 'bio-trainer-' + CACHE_VERSION;
 
 // 需要離線可用的核心檔案
